@@ -12,9 +12,19 @@ import com.szmengran.common.PageInfo;
 import com.szmengran.common.config.database.DatabaseProperty;
 import com.szmengran.common.orm.DBManager;
 import com.szmengran.common.orm.dao.AbstractDao;
+import com.szmengran.common.orm.dao.mysql.MySqlDaoFactory;
+import com.szmengran.common.orm.dao.oracle.OracleDaoFactory;
 
 public abstract class AbstractService {
-	public abstract AbstractDao getDao() throws IOException;
+	public AbstractDao getDao() throws IOException {
+		DatabaseProperty databaseProperty = DatabaseProperty.getInstance();
+		if (databaseProperty.getDriver().equalsIgnoreCase("com.mysql.jdbc.Driver")) {
+			return new MySqlDaoFactory().getDao();
+		} else if (databaseProperty.getDriver().equalsIgnoreCase("oracle.jdbc.driver.OracleDriver")) {
+			return new OracleDaoFactory().getDao();
+		}
+		return null;
+	}
 
 	public DBManager getDBManager() throws IOException {
 		return new DBManager();

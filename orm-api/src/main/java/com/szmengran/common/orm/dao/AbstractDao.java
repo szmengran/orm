@@ -34,9 +34,9 @@ public abstract class AbstractDao{
 	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * DateTime： Jan 19, 2017 4:58:45 PM
 	 */
-	public void insert(DBManager dbManager, Object object) throws Exception {
-		insert(dbManager, object, null, null);
-	}
+//	public void insert(DBManager dbManager, Object object) throws Exception {
+//		insert(dbManager, object, null, null);
+//	}
 	
 	/**
 	 * 将数据插入到数据表中,主键从数据中生成
