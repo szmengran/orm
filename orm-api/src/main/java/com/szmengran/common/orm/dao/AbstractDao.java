@@ -27,18 +27,6 @@ import com.szmengran.common.reflect.ReflectHandler;
 public abstract class AbstractDao{
 
 	/**
-	 * 将数据插入到数据表中
-	 * @param dbManager
-	 * @param object
-	 * @throws Exception
-	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * DateTime： Jan 19, 2017 4:58:45 PM
-	 */
-//	public void insert(DBManager dbManager, Object object) throws Exception {
-//		insert(dbManager, object, null, null);
-//	}
-	
-	/**
 	 * 将数据插入到数据表中,主键从数据中生成
 	 * @param dbManager
 	 * @param object
@@ -89,23 +77,6 @@ public abstract class AbstractDao{
 		dbManager.executePrepare();
 	}
 	
-	/**
-	 * 将数据批量插入到数据表中
-	 * @param dbManager
-	 * @param list
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws SQLException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException 
-	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
-	 * @createTime 2018年3月18日下午10:04:38
-	 */
-	public void addBatch(DBManager dbManager, List<Object> list) throws NoSuchMethodException, SecurityException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		addBatch(dbManager, list, null, null);
-	}
 	/**
 	 * 将数据批量插入到数据表中,主键采用数据库自动生成
 	 * @param dbManager

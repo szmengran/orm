@@ -46,6 +46,21 @@ public abstract class AbstractService {
 
 	/**
 	 * 保存一条记录
+	 * @param dbManager
+	 * @param object
+	 * @throws IOException
+	 * @throws SQLException
+	 * @throws Exception 
+	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
+	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
+	 * @createTime 2018年3月18日下午10:19:19
+	 */
+	public void save(DBManager dbManager, Object object) throws IOException, SQLException, Exception{
+		save(dbManager, object, null, null);
+	}
+	
+	/**
+	 * 保存一条记录
 	 * @param object
 	 * @param primaryKeyType
 	 * @param seq_name
@@ -72,22 +87,6 @@ public abstract class AbstractService {
 		} finally {
 			dbManager.close();
 		}
-
-	}
-
-	/**
-	 * 保存一条记录
-	 * @param dbManager
-	 * @param object
-	 * @throws IOException
-	 * @throws SQLException
-	 * @throws Exception 
-	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
-	 * @createTime 2018年3月18日下午10:19:19
-	 */
-	public void save(DBManager dbManager, Object object) throws IOException, SQLException, Exception{
-		save(dbManager, object, null, null);
 	}
 
 	/**
