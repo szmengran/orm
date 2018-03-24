@@ -23,8 +23,8 @@ public class DBPool {
 		write = new Properties();
 		read = new Properties();
 		try {
-			loadConfig(write, "druidwrite.properties");
-			loadConfig(read, "druidread.properties");
+			loadConfig(write, "writedb.properties");
+			loadConfig(read, "readdb.properties");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
