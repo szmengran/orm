@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.szmengran.common.Constant;
 
 /**
  * @Package com.szmengran.common.pool.druid
@@ -23,8 +24,8 @@ public class DBPool {
 		write = new Properties();
 		read = new Properties();
 		try {
-			loadConfig(write, "writedb.properties");
-			loadConfig(read, "readdb.properties");
+			loadConfig(write, Constant.WRITE_POOL_CONFIG_FILE);
+			loadConfig(read, Constant.READ_POOL_CONFIG_FILE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -41,7 +42,7 @@ public class DBPool {
 	 */
 	public static final DataSource getDataSource(String type) throws Exception{
 		DataSource dataSource = null;
-		if (type.equalsIgnoreCase("read")) {
+		if (type.equalsIgnoreCase(Constant.DATASOURCE_READ)) {
 			dataSource = DruidDataSourceFactory.createDataSource(read);
 		} else {
 			dataSource = DruidDataSourceFactory.createDataSource(write);

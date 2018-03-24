@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.szmengran.common.Constant;
 import com.szmengran.common.PageInfo;
 import com.szmengran.common.config.database.DatabaseProperty;
 import com.szmengran.common.orm.DBManager;
@@ -74,7 +75,7 @@ public abstract class AbstractService {
 	public void save(Object object, Integer primaryKeyType, String seq_name) throws IOException, SQLException, Exception{
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_WRITE);
+			dbManager.openConnection(Constant.DATASOURCE_WRITE);
 			dbManager.beginTransaction();
 			save(dbManager, object, primaryKeyType, seq_name);
 			dbManager.commitTransaction();
@@ -117,7 +118,7 @@ public abstract class AbstractService {
 	public void addBatch(List<?> list)throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException, Exception  {
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_WRITE);
+			dbManager.openConnection(Constant.DATASOURCE_WRITE);
 			dbManager.beginTransaction();
 			addBatch(dbManager, list);
 			dbManager.commitBatch();
@@ -186,7 +187,7 @@ public abstract class AbstractService {
 	public void delete(Object object) throws IOException, SQLException, Exception{
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_WRITE);
+			dbManager.openConnection(Constant.DATASOURCE_WRITE);
 			dbManager.beginTransaction();
 			delete(dbManager, object);
 			dbManager.commitTransaction();
@@ -254,7 +255,7 @@ public abstract class AbstractService {
 			{
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_READ);
+			dbManager.openConnection(Constant.DATASOURCE_READ);
 			return findByConditions(dbManager, object, params, null, null);
 		} finally {
 			dbManager.close();
@@ -321,7 +322,7 @@ public abstract class AbstractService {
 			String strPageSize) throws SQLException, Exception {
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_READ);
+			dbManager.openConnection(Constant.DATASOURCE_READ);
 			StringBuffer strSql = new StringBuffer();
 			strSql.append("SELECT * FROM ").append(object.getClass().getSimpleName().toUpperCase())
 					.append(" WHERE 1=1 ");
@@ -353,7 +354,7 @@ public abstract class AbstractService {
 			String strPage, String strPageSize) throws SQLException, Exception {
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_READ);
+			dbManager.openConnection(Constant.DATASOURCE_READ);
 			StringBuffer strSql = new StringBuffer();
 			strSql.append("SELECT * FROM ").append(object.getClass().getSimpleName().toUpperCase())
 					.append(" WHERE 1=1 ");
@@ -400,7 +401,7 @@ public abstract class AbstractService {
 			{
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_READ);
+			dbManager.openConnection(Constant.DATASOURCE_READ);
 			return findBySql(dbManager, object, strSql, params, strPage, strPageSize);
 		} finally {
 			dbManager.close();
@@ -505,7 +506,7 @@ public abstract class AbstractService {
 	public int count(String strSql, Object[] params) throws SQLException, Exception{
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_READ);
+			dbManager.openConnection(Constant.DATASOURCE_READ);
 			return count(dbManager, strSql, params);
 		} finally {
 			dbManager.close();
@@ -548,7 +549,7 @@ public abstract class AbstractService {
 	public void update(Object object) throws IOException, SQLException, Exception{
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_WRITE);
+			dbManager.openConnection(Constant.DATASOURCE_WRITE);
 			dbManager.beginTransaction();
 			update(dbManager, object);
 			dbManager.commitTransaction();
@@ -593,7 +594,7 @@ public abstract class AbstractService {
 	public void executeSql(String strSql) throws SQLException, Exception{
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_WRITE);
+			dbManager.openConnection(Constant.DATASOURCE_WRITE);
 			dbManager.beginTransaction();
 			executeSql(dbManager, strSql);
 			dbManager.commitTransaction();
@@ -635,7 +636,7 @@ public abstract class AbstractService {
 	public void executeSql(String strSql, Object[] params) throws SQLException,Exception {
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_WRITE);
+			dbManager.openConnection(Constant.DATASOURCE_WRITE);
 			dbManager.beginTransaction();
 			executeSql(dbManager, strSql, params);
 			dbManager.commitTransaction();
@@ -680,7 +681,7 @@ public abstract class AbstractService {
 	public Object findByPrimaryKey(Object object) throws SQLException, Exception {
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_READ);
+			dbManager.openConnection(Constant.DATASOURCE_READ);
 			return findByPrimaryKey(dbManager, object);
 		} finally {
 			dbManager.close();
@@ -749,7 +750,7 @@ public abstract class AbstractService {
 	public byte[] findByteFromBlob(String strSql, Object[] params) throws SQLException, Exception {
 		DBManager dbManager = getDBManager();
 		try {
-			dbManager.openConnection(DatabaseProperty.DATASOURCE_READ);
+			dbManager.openConnection(Constant.DATASOURCE_READ);
 			return findByteFromBlob(dbManager, strSql, params);
 		} finally {
 			dbManager.close();
