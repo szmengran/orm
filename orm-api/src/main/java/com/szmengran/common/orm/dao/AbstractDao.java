@@ -267,7 +267,7 @@ public abstract class AbstractDao{
 	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * DateTime： Jan 19, 2017 4:57:40 PM
 	 */
-	public List<Object> findByConditions(DBManager dbManager, Object object, Map<String,Object> params, Integer startRow, Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+	public <T> List<T> findByConditions(DBManager dbManager, T object, Map<String,Object> params, Integer startRow, Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
 		StringBuffer conditions = new StringBuffer();
 		Object[] values = null;
 		if(params != null){
@@ -296,7 +296,7 @@ public abstract class AbstractDao{
 	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * DateTime： Jan 19, 2017 4:57:23 PM
 	 */
-	public List<Object> findByConditions(DBManager dbManager,Object object,StringBuffer conditions,Object[] params, Integer startRow,Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+	public <T> List<T> findByConditions(DBManager dbManager, T object,StringBuffer conditions,Object[] params, Integer startRow,Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
 		StringBuffer strSql = new StringBuffer();
 		strSql.append("SELECT * FROM ")
 		  .append(object.getClass().getSimpleName().toUpperCase())
@@ -326,8 +326,8 @@ public abstract class AbstractDao{
 	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * DateTime： Mar 7, 2017 2:05:46 PM
 	 */
-	public List<Object> findByConditions(DBManager dbManager,Object object,String strSql,Object[] params, Integer startRow,Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
-		List<Object> list = new ArrayList<Object>();
+	public <T> List<T> findByConditions(DBManager dbManager,T object,String strSql,Object[] params, Integer startRow,Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+		List<T> list = new ArrayList<T>();
 		if(pageSize != null){ //如果pageSize!=null说明传进来的参数有值，表示需要分页
 			dbManager.prepareStatement(getPageSql(strSql, startRow, pageSize));
 		}else{
@@ -341,7 +341,8 @@ public abstract class AbstractDao{
 		}
 		dbManager.executePrepareQuery();
 		while(dbManager.next()){
-			list.add(dbManager.setObjectValueByField(object.getClass().newInstance()));
+			list.add(dbManager.setObjectValueByField(object));
+//			list.add((T)dbManager.setObjectValueByField(object.getClass().newInstance()));
 		}
 		return list;
 	}
@@ -414,7 +415,7 @@ public abstract class AbstractDao{
 	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * DateTime： Jan 19, 2017 4:56:31 PM
 	 */
-	public Object findByPrimaryKeys(DBManager dbManager, Object object) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public <T> T findByPrimaryKeys(DBManager dbManager, T object) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT * FROM "+object.getClass().getSimpleName().toUpperCase()+" WHERE ");
 		List<String> idFields = dbManager.getPrimaryKeys(object);
@@ -440,8 +441,9 @@ public abstract class AbstractDao{
 		}else{
 			return null;
 		}
-		return object;
+		return (T)object;
 	}
+
 	/**
 	 * 执行更新或删除
 	 * @param dbManager

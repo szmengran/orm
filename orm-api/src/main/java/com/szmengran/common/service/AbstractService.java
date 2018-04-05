@@ -678,7 +678,7 @@ public abstract class AbstractService {
 	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 *             DateTime： Mar 7, 2017 8:56:11 AM
 	 */
-	public Object findByPrimaryKey(Object object) throws SQLException, Exception {
+	public <T> T findByPrimaryKey(T object) throws SQLException, Exception {
 		DBManager dbManager = getDBManager();
 		try {
 			dbManager.openConnection(Constant.DATASOURCE_READ);
@@ -705,7 +705,7 @@ public abstract class AbstractService {
 	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 *             DateTime： Mar 7, 2017 8:57:00 AM
 	 */
-	public Object findByPrimaryKey(DBManager dbManager, Object object)
+	public <T> T findByPrimaryKey(DBManager dbManager, T object)
 			throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, SQLException {
 		AbstractDao abstractDao = getDao();

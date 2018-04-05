@@ -735,7 +735,7 @@ public class DBManager {
 	 * @Author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * @ModifyTime 2015-3-14 下午11:07:50
 	 */
-	public Object setObjectValueByField(Object object) throws SQLException, NoSuchMethodException, SecurityException,
+	public <T> T setObjectValueByField(T object) throws SQLException, NoSuchMethodException, SecurityException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		String filedName = "";
 		ResultSetMetaData rsmd = ps.getMetaData();
