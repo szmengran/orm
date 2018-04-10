@@ -24,22 +24,26 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.szmengran.common.cache.DataCache;
-import com.szmengran.common.pool.druid.DBPool;
 import com.szmengran.common.reflect.ReflectHandler;
 
 public class DBManager {
 	private Logger logger = LoggerFactory.getLogger(DBManager.class);
+	protected DataSource dataSource = null;
 	protected Connection conn = null;
 	protected ResultSet rs = null;
 	protected PreparedStatement ps = null;
 	protected Statement sm = null;
 	protected CallableStatement cStmt = null;
-
+	
+	public DBManager(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 	/**
 	 * 打开数据库连接
 	 * 
@@ -53,8 +57,8 @@ public class DBManager {
 	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 *             DateTime： Jan 19, 2017 5:11:31 PM
 	 */
-	public Connection openConnection(String type) throws SQLException, Exception{
-		conn = DBPool.getDataSource(type).getConnection();
+	public Connection openConnection() throws SQLException, Exception{
+		conn = dataSource.getConnection();
 		sm = conn.createStatement();
 		return conn;
 	}

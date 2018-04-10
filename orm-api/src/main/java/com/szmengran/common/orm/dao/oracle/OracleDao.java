@@ -1,5 +1,7 @@
 package com.szmengran.common.orm.dao.oracle;
 
+import javax.sql.DataSource;
+
 import com.szmengran.common.orm.DBManager;
 import com.szmengran.common.orm.dao.AbstractDao;
 
@@ -9,8 +11,8 @@ import com.szmengran.common.orm.dao.AbstractDao;
  * @creaetTime 2014-7-30 下午8:54:11
  */
 public class OracleDao extends AbstractDao{
-	public DBManager getDBManager(){
-		return new DBManager();
+	public DBManager getDBManager(DataSource dataSource){
+		return new DBManager(dataSource);
 	}
 	private OracleDao(){
 		

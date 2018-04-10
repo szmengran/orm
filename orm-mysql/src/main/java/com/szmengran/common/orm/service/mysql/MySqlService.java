@@ -10,13 +10,13 @@ package com.szmengran.common.orm.service.mysql;
 import java.io.IOException;
 
 import com.szmengran.common.orm.dao.AbstractDao;
-import com.szmengran.common.orm.dao.mysql.MySqlDaoFactory;
+import com.szmengran.common.orm.dao.mysql.MySqlDao;
 import com.szmengran.common.service.AbstractService;
 
 public class MySqlService extends AbstractService{
 	@Override
 	public AbstractDao getDao() throws IOException {
-		return new MySqlDaoFactory().getDao();
+		return MySqlDao.getInstance();
 	}
 }
 

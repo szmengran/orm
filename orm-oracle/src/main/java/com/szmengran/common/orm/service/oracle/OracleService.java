@@ -10,13 +10,13 @@ package com.szmengran.common.orm.service.oracle;
 import java.io.IOException;
 
 import com.szmengran.common.orm.dao.AbstractDao;
-import com.szmengran.common.orm.dao.oracle.OracleDaoFactory;
+import com.szmengran.common.orm.dao.oracle.OracleDao;
 import com.szmengran.common.service.AbstractService;
 
 public class OracleService extends AbstractService{
 	@Override
 	public AbstractDao getDao() throws IOException {
-		return new OracleDaoFactory().getDao();
+		return OracleDao.getInstance();
 	}
 
 }

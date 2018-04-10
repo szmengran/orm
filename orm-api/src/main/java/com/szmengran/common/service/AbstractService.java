@@ -8,27 +8,42 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.szmengran.common.Constant;
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Value;
+
+import com.alibaba.druid.pool.DruidDataSource;
+import com.szmengran.common.Constants;
 import com.szmengran.common.PageInfo;
-import com.szmengran.common.config.database.DatabaseProperty;
 import com.szmengran.common.orm.DBManager;
 import com.szmengran.common.orm.dao.AbstractDao;
-import com.szmengran.common.orm.dao.mysql.MySqlDaoFactory;
-import com.szmengran.common.orm.dao.oracle.OracleDaoFactory;
+import com.szmengran.common.orm.dao.mysql.MySqlDao;
+import com.szmengran.common.orm.dao.oracle.OracleDao;
 
 public abstract class AbstractService {
+	@Value("${spring.datasource.databasetype}")
+    private String databasetype;
+	
+	@Resource
+    private DruidDataSource writeDataSource;
+	
+	@Resource
+	private DruidDataSource readDataSource;
+	
 	public AbstractDao getDao() throws IOException {
-		DatabaseProperty databaseProperty = DatabaseProperty.getInstance();
-		if (databaseProperty.getDriver().equalsIgnoreCase("com.mysql.jdbc.Driver")) {
-			return new MySqlDaoFactory().getDao();
-		} else if (databaseProperty.getDriver().equalsIgnoreCase("oracle.jdbc.driver.OracleDriver")) {
-			return new OracleDaoFactory().getDao();
+		if (Constants.DATABASE_TYPE_ORACLE.equalsIgnoreCase(databasetype)) {
+			return OracleDao.getInstance();
+		} else {
+			return MySqlDao.getInstance();
 		}
-		return null;
 	}
-
-	public DBManager getDBManager() throws IOException {
-		return new DBManager();
+	
+	public DBManager getDBManager(String datasourceType) throws IOException {
+		if (Constants.DATASOURCE_READ.equalsIgnoreCase(datasourceType)) {
+			return new DBManager(readDataSource);
+		} else {
+			return new DBManager(writeDataSource);
+		}
 	}
 
 	/**
@@ -73,9 +88,9 @@ public abstract class AbstractService {
 	 * @createTime 2018年3月18日下午10:19:13
 	 */
 	public void save(Object object, Integer primaryKeyType, String seq_name) throws IOException, SQLException, Exception{
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_WRITE);
+			dbManager.openConnection();
 			dbManager.beginTransaction();
 			save(dbManager, object, primaryKeyType, seq_name);
 			dbManager.commitTransaction();
@@ -116,9 +131,9 @@ public abstract class AbstractService {
 	 *             DateTime： Mar 7, 2017 8:40:09 AM
 	 */
 	public void addBatch(List<?> list)throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException, Exception  {
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_WRITE);
+			dbManager.openConnection();
 			dbManager.beginTransaction();
 			addBatch(dbManager, list);
 			dbManager.commitBatch();
@@ -185,9 +200,9 @@ public abstract class AbstractService {
 	 *             DateTime： Mar 7, 2017 8:41:15 AM
 	 */
 	public void delete(Object object) throws IOException, SQLException, Exception{
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_WRITE);
+			dbManager.openConnection();
 			dbManager.beginTransaction();
 			delete(dbManager, object);
 			dbManager.commitTransaction();
@@ -253,9 +268,9 @@ public abstract class AbstractService {
 	 */
 	public List<Object> findByConditions(Object object, Map<String, Object> params, Integer startRow, Integer pageSize) throws SQLException, Exception
 			{
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_READ);
+			dbManager.openConnection();
 			return findByConditions(dbManager, object, params, null, null);
 		} finally {
 			dbManager.close();
@@ -320,9 +335,9 @@ public abstract class AbstractService {
 	 */
 	public PageInfo findByConditions(Object object, StringBuffer conditions, Object[] params, String strPage,
 			String strPageSize) throws SQLException, Exception {
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_READ);
+			dbManager.openConnection();
 			StringBuffer strSql = new StringBuffer();
 			strSql.append("SELECT * FROM ").append(object.getClass().getSimpleName().toUpperCase())
 					.append(" WHERE 1=1 ");
@@ -352,9 +367,9 @@ public abstract class AbstractService {
 	 */
 	public PageInfo findByConditions(Object object, StringBuffer conditions, String orderby, Object[] params,
 			String strPage, String strPageSize) throws SQLException, Exception {
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_READ);
+			dbManager.openConnection();
 			StringBuffer strSql = new StringBuffer();
 			strSql.append("SELECT * FROM ").append(object.getClass().getSimpleName().toUpperCase())
 					.append(" WHERE 1=1 ");
@@ -399,9 +414,9 @@ public abstract class AbstractService {
 	 */
 	public PageInfo findBySql(Object object, String strSql, Object[] params, String strPage, String strPageSize) throws SQLException, Exception
 			{
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_READ);
+			dbManager.openConnection();
 			return findBySql(dbManager, object, strSql, params, strPage, strPageSize);
 		} finally {
 			dbManager.close();
@@ -504,9 +519,9 @@ public abstract class AbstractService {
 	 *             DateTime： Mar 7, 2017 8:52:36 AM
 	 */
 	public int count(String strSql, Object[] params) throws SQLException, Exception{
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_READ);
+			dbManager.openConnection();
 			return count(dbManager, strSql, params);
 		} finally {
 			dbManager.close();
@@ -547,9 +562,9 @@ public abstract class AbstractService {
 	 *             DateTime： Mar 7, 2017 8:53:36 AM
 	 */
 	public void update(Object object) throws IOException, SQLException, Exception{
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_WRITE);
+			dbManager.openConnection();
 			dbManager.beginTransaction();
 			update(dbManager, object);
 			dbManager.commitTransaction();
@@ -592,9 +607,9 @@ public abstract class AbstractService {
 	 *             DateTime： Mar 7, 2017 8:54:52 AM
 	 */
 	public void executeSql(String strSql) throws SQLException, Exception{
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_WRITE);
+			dbManager.openConnection();
 			dbManager.beginTransaction();
 			executeSql(dbManager, strSql);
 			dbManager.commitTransaction();
@@ -634,9 +649,9 @@ public abstract class AbstractService {
 	 *             DateTime： Mar 7, 2017 8:55:14 AM
 	 */
 	public void executeSql(String strSql, Object[] params) throws SQLException,Exception {
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_WRITE);
+			dbManager.openConnection();
 			dbManager.beginTransaction();
 			executeSql(dbManager, strSql, params);
 			dbManager.commitTransaction();
@@ -679,9 +694,9 @@ public abstract class AbstractService {
 	 *             DateTime： Mar 7, 2017 8:56:11 AM
 	 */
 	public <T> T findByPrimaryKey(T object) throws SQLException, Exception {
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_READ);
+			dbManager.openConnection();
 			return findByPrimaryKey(dbManager, object);
 		} finally {
 			dbManager.close();
@@ -748,9 +763,9 @@ public abstract class AbstractService {
 	 *             DateTime： Mar 7, 2017 8:58:08 AM
 	 */
 	public byte[] findByteFromBlob(String strSql, Object[] params) throws SQLException, Exception {
-		DBManager dbManager = getDBManager();
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
-			dbManager.openConnection(Constant.DATASOURCE_READ);
+			dbManager.openConnection();
 			return findByteFromBlob(dbManager, strSql, params);
 		} finally {
 			dbManager.close();
