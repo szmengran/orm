@@ -3,7 +3,7 @@ package com.szmengran.common;
 import java.io.Serializable;
 import java.util.List;
 
-public class PageInfo implements Serializable{
+public class PageInfo<T> implements Serializable{
 	/**
 	 * 
 	 */
@@ -11,7 +11,7 @@ public class PageInfo implements Serializable{
 	private Integer pageSize;
 	private Integer page;
 	private Integer total;
-	private List<Object> list;
+	private List<T> list;
 	public Integer getPageSize() {
 		return pageSize;
 	}
@@ -30,10 +30,10 @@ public class PageInfo implements Serializable{
 	public void setTotal(Integer total) {
 		this.total = total;
 	}
-	public List<Object> getList() {
+	public List<T> getList() {
 		return list;
 	}
-	public void setList(List<Object> list) {
+	public void setList(List<T> list) {
 		this.list = list;
 	}
 	

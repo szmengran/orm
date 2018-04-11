@@ -326,6 +326,7 @@ public abstract class AbstractDao{
 	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * DateTime： Mar 7, 2017 2:05:46 PM
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> List<T> findByConditions(DBManager dbManager,T object,String strSql,Object[] params, Integer startRow,Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
 		List<T> list = new ArrayList<T>();
 		if(pageSize != null){ //如果pageSize!=null说明传进来的参数有值，表示需要分页
@@ -341,8 +342,7 @@ public abstract class AbstractDao{
 		}
 		dbManager.executePrepareQuery();
 		while(dbManager.next()){
-			list.add(dbManager.setObjectValueByField(object));
-//			list.add((T)dbManager.setObjectValueByField(object.getClass().newInstance()));
+			list.add((T)dbManager.setObjectValueByField(object.getClass().newInstance()));
 		}
 		return list;
 	}

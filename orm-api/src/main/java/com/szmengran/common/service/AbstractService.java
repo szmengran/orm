@@ -315,7 +315,7 @@ public abstract class AbstractService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:45:04
 	 */
-	public List<Object> findByConditions(Object object, StringBuffer conditions, Object[] params) throws SQLException, Exception {
+	public <T>List<T> findByConditions(T object, StringBuffer conditions, Object[] params) throws SQLException, Exception {
 		return findByConditions(object, conditions, params, null, null).getList();
 	}
 
@@ -333,7 +333,7 @@ public abstract class AbstractService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:44:43
 	 */
-	public PageInfo findByConditions(Object object, StringBuffer conditions, Object[] params, String strPage,
+	public <T>PageInfo<T> findByConditions(T object, StringBuffer conditions, Object[] params, String strPage,
 			String strPageSize) throws SQLException, Exception {
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
@@ -365,7 +365,7 @@ public abstract class AbstractService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:43:55
 	 */
-	public PageInfo findByConditions(Object object, StringBuffer conditions, String orderby, Object[] params,
+	public <T>PageInfo<T> findByConditions(T object, StringBuffer conditions, String orderby, Object[] params,
 			String strPage, String strPageSize) throws SQLException, Exception {
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
@@ -394,7 +394,7 @@ public abstract class AbstractService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:43:21
 	 */
-	public List<Object> findBySql(Object object, String strSql, Object[] params) throws SQLException, Exception {
+	public <T>List<T> findBySql(T object, String strSql, Object[] params) throws SQLException, Exception {
 		return findBySql(object, strSql, params, null, null).getList();
 	}
 
@@ -412,7 +412,7 @@ public abstract class AbstractService {
 	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 *             DateTime： Mar 7, 2017 8:49:19 AM
 	 */
-	public PageInfo findBySql(Object object, String strSql, Object[] params, String strPage, String strPageSize) throws SQLException, Exception
+	public <T>PageInfo<T> findBySql(T object, String strSql, Object[] params, String strPage, String strPageSize) throws SQLException, Exception
 			{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
@@ -444,10 +444,10 @@ public abstract class AbstractService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:42:23
 	 */
-	public PageInfo findBySql(DBManager dbManager, Object object, String strSql, Object[] params, String strPage,
+	public <T>PageInfo<T> findBySql(DBManager dbManager, T object, String strSql, Object[] params, String strPage,
 			String strPageSize) throws IOException, SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		AbstractDao abstractDao = getDao();
-		PageInfo pageInfo = new PageInfo();
+		PageInfo<T> pageInfo = new PageInfo<T>();
 		Integer startRow = null;
 		Integer pageSize = null;
 		if (strPageSize != null) {
@@ -459,7 +459,7 @@ public abstract class AbstractService {
 			pageInfo.setTotal(total);
 			startRow = (page - 1 <= 0 ? 0 : page - 1) * pageSize;
 		}
-		List<Object> list = abstractDao.findByConditions(dbManager, object, strSql, params, startRow, pageSize);
+		List<T> list = abstractDao.findByConditions(dbManager, object, strSql, params, startRow, pageSize);
 		pageInfo.setList(list);
 		return pageInfo;
 	}
@@ -486,10 +486,10 @@ public abstract class AbstractService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:41:38
 	 */
-	public PageInfo findBySql(DBManager dbManager, Object object, String strSql, String orderby, Object[] params,
+	public <T>PageInfo<T> findBySql(DBManager dbManager, T object, String strSql, String orderby, Object[] params,
 			String strPage, String strPageSize) throws IOException, SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		AbstractDao abstractDao = getDao();
-		PageInfo pageInfo = new PageInfo();
+		PageInfo<T> pageInfo = new PageInfo<T>();
 		Integer startRow = null;
 		Integer pageSize = null;
 		if (strPageSize != null) {
@@ -501,7 +501,7 @@ public abstract class AbstractService {
 			pageInfo.setTotal(total);
 			startRow = (page - 1 <= 0 ? 0 : page - 1) * pageSize;
 		}
-		List<Object> list = abstractDao.findByConditions(dbManager, object, strSql + orderby, params, startRow,
+		List<T> list = abstractDao.findByConditions(dbManager, object, strSql + orderby, params, startRow,
 				pageSize);
 		pageInfo.setList(list);
 		return pageInfo;
