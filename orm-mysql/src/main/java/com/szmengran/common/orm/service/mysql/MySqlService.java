@@ -11,9 +11,9 @@ import java.io.IOException;
 
 import com.szmengran.common.orm.dao.AbstractDao;
 import com.szmengran.common.orm.dao.mysql.MySqlDao;
-import com.szmengran.common.service.AbstractService;
+import com.szmengran.common.service.BaseService;
 
-public class MySqlService extends AbstractService{
+public class MySqlService extends BaseService{
 	@Override
 	public AbstractDao getDao() throws IOException {
 		return MySqlDao.getInstance();

@@ -10,19 +10,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import com.alibaba.druid.pool.DruidDataSource;
 import com.szmengran.common.Constants;
 import com.szmengran.common.PageInfo;
 import com.szmengran.common.orm.DBManager;
 import com.szmengran.common.orm.dao.AbstractDao;
-import com.szmengran.common.orm.dao.mysql.MySqlDao;
-import com.szmengran.common.orm.dao.oracle.OracleDao;
 
-public abstract class AbstractService {
-	@Value("${spring.datasource.databasetype}")
-    private String databasetype;
+public abstract class BaseService {
 	
 	@Resource
     private DruidDataSource writeDataSource;
@@ -30,13 +24,7 @@ public abstract class AbstractService {
 	@Resource
 	private DruidDataSource readDataSource;
 	
-	public AbstractDao getDao() throws IOException {
-		if (Constants.DATABASE_TYPE_ORACLE.equalsIgnoreCase(databasetype)) {
-			return OracleDao.getInstance();
-		} else {
-			return MySqlDao.getInstance();
-		}
-	}
+	public abstract AbstractDao getDao() throws IOException ;
 	
 	public DBManager getDBManager(String datasourceType) throws IOException {
 		if (Constants.DATASOURCE_READ.equalsIgnoreCase(datasourceType)) {
