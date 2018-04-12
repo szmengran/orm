@@ -76,6 +76,20 @@ public abstract class AbstractService {
 	}
 	
 	/**
+	 * 根据主键类型生成主键并保存数据
+	 * @param object
+	 * @param primaryKeyType
+	 * @throws IOException
+	 * @throws SQLException
+	 * @throws Exception      
+	 * @return: void      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
+	 */
+	public void save(Object object, Integer primaryKeyType) throws IOException, SQLException, Exception{
+		save(object, primaryKeyType, null);
+	}
+	/**
 	 * 保存一条记录
 	 * @param object
 	 * @param primaryKeyType
@@ -249,7 +263,7 @@ public abstract class AbstractService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:46:24
 	 */
-	public List<Object> findByConditions(Object object, Map<String, Object> params) throws SQLException, Exception {
+	public <T>List<T> findByConditions(T object, Map<String, Object> params) throws SQLException, Exception {
 		return findByConditions(object, params, null, null);
 	}
 
@@ -266,7 +280,7 @@ public abstract class AbstractService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:46:03
 	 */
-	public List<Object> findByConditions(Object object, Map<String, Object> params, Integer startRow, Integer pageSize) throws SQLException, Exception
+	public <T>List<T> findByConditions(T object, Map<String, Object> params, Integer startRow, Integer pageSize) throws SQLException, Exception
 			{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
@@ -292,12 +306,12 @@ public abstract class AbstractService {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 * @throws InstantiationException
-	 * @throws SQLException 
-	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
-	 * @createTime 2018年3月18日下午4:45:35
+	 * @throws SQLException      
+	 * @return: List<T>      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public List<Object> findByConditions(DBManager dbManager, Object object, Map<String, Object> params,
+	public <T>List<T> findByConditions(DBManager dbManager, T object, Map<String, Object> params,
 			Integer startRow, Integer pageSize) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, SQLException {
 		AbstractDao abstractDao = getDao();
 		return abstractDao.findByConditions(dbManager, object, params, startRow, pageSize);
