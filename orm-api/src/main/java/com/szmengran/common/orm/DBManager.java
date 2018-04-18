@@ -755,19 +755,19 @@ public class DBManager {
 				Class<?>[] type = method.getParameterTypes();
 				if (type[0] == Integer.class) {
 					if (rs.getObject(filedName) != null && !rs.wasNull()) {
-						Integer value = rs.getInt(filedName);
-						method.invoke(object, value);
+						method.invoke(object, rs.getInt(filedName));
 					}
 				} else if (type[0] == Date.class || type[0] == Timestamp.class) {
 					method.invoke(object, rs.getTimestamp(filedName));
 				} else if (type[0] == java.sql.Date.class) {
 					method.invoke(object, rs.getDate(filedName));
 				} else if (type[0] == Double.class) {
-					method.invoke(object, rs.getDouble(filedName));
+					if (rs.getObject(filedName) != null && !rs.wasNull()) {
+						method.invoke(object, rs.getDouble(filedName));
+					}
 				} else if (type[0] == Long.class) {
 					if (rs.getObject(filedName) != null && !rs.wasNull()) {
-						Long value = rs.getLong(filedName);
-						method.invoke(object, value);
+						method.invoke(object, rs.getLong(filedName));
 					}
 				} else if (type[0] == Blob.class) {
 					method.invoke(object, rs.getBlob(filedName));
@@ -775,8 +775,7 @@ public class DBManager {
 					method.invoke(object, rs.getFloat(filedName));
 				} else { // 字符串
 					if (rs.getObject(filedName) != null && !rs.wasNull()) {
-						String value = rs.getString(filedName);
-						method.invoke(object, value);
+						method.invoke(object, rs.getString(filedName));
 					}
 				}
 			}

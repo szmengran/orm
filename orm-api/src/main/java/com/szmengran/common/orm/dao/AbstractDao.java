@@ -63,12 +63,12 @@ public abstract class AbstractDao{
 		dbManager.prepareStatement(sb.toString());
 		int index = 1 ;
 		for(String field:set){
-			if(DbPrimaryKeyType.AUTO_INCREMENT == primaryKeyType && isPrimaryKey(primaryKeys, field)){
+			if((DbPrimaryKeyType.SEQ == primaryKeyType || DbPrimaryKeyType.AUTO_INCREMENT == primaryKeyType) && isPrimaryKey(primaryKeys, field)){
 				continue;
-			}else if(DbPrimaryKeyType.UUID == primaryKeyType && isPrimaryKey(primaryKeys, field)){
+			} else if (DbPrimaryKeyType.UUID == primaryKeyType && isPrimaryKey(primaryKeys, field)){
 				String value = generatePrimaryKey(); //生产一个UUID作为主键
 				dbManager.setPrepareParameters(index++, value);
-			}else{
+			} else {
 				Method method=map.get(field);
 				Object value = method.invoke(object);
 				dbManager.setPrepareParameters(index++, value);
