@@ -139,6 +139,7 @@ public abstract class BaseService {
 			dbManager.beginTransaction();
 			addBatch(dbManager, list);
 			dbManager.commitBatch();
+			dbManager.commitTransaction();
 		} catch (SQLException e) {
 			dbManager.rollbackTransaction();
 			throw e;
@@ -186,6 +187,7 @@ public abstract class BaseService {
 			dbManager.beginTransaction();
 			addBatch(dbManager, list, primaryKeyType, seq_name);
 			dbManager.commitBatch();
+			dbManager.commitTransaction();
 		} catch (SQLException e) {
 			dbManager.rollbackTransaction();
 			throw e;
