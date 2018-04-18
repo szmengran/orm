@@ -171,6 +171,33 @@ public abstract class BaseService {
 
 	/**
 	 * 批量保存记录
+	 * @param list
+	 * @param primaryKeyType
+	 * @param seq_name
+	 * @throws Exception      
+	 * @return: void      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
+	 */
+	public void addBatch(List<?> list, Integer primaryKeyType, String seq_name) throws Exception {
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
+		try {
+			dbManager.openConnection();
+			dbManager.beginTransaction();
+			addBatch(dbManager, list, primaryKeyType, seq_name);
+			dbManager.commitBatch();
+		} catch (SQLException e) {
+			dbManager.rollbackTransaction();
+			throw e;
+		} catch (Exception e) {
+			dbManager.rollbackTransaction();
+			throw e;
+		} finally {
+			dbManager.close();
+		}
+	}
+	/**
+	 * 批量保存记录
 	 * @param dbManager
 	 * @param list
 	 * @param primaryKeyType
