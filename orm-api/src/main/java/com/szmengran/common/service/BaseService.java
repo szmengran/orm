@@ -24,6 +24,23 @@ public abstract class BaseService {
 	@Resource
 	private DruidDataSource readDataSource;
 	
+	
+	public DruidDataSource getWriteDataSource() {
+		return writeDataSource;
+	}
+
+	public void setWriteDataSource(DruidDataSource writeDataSource) {
+		this.writeDataSource = writeDataSource;
+	}
+
+	public DruidDataSource getReadDataSource() {
+		return readDataSource;
+	}
+
+	public void setReadDataSource(DruidDataSource readDataSource) {
+		this.readDataSource = readDataSource;
+	}
+
 	public abstract AbstractDao getDao() throws IOException ;
 	
 	public DBManager getDBManager(String datasourceType) throws IOException {
@@ -221,21 +238,22 @@ public abstract class BaseService {
 	}
 
 	/**
-	 * 删除一条记录
-	 * 
+	 * 删除一条记录并返回删除的结果条数
 	 * @param object
-	 * @throws IOException 
-	 * @throws SQLException 
-	 * @throws Exception
-	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 *             DateTime： Mar 7, 2017 8:41:15 AM
+	 * @throws IOException
+	 * @throws SQLException
+	 * @throws Exception      
+	 * @return: void      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void delete(Object object) throws IOException, SQLException, Exception{
+	public int delete(Object object) throws IOException, SQLException, Exception{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
+		int count = 0;
 		try {
 			dbManager.openConnection();
 			dbManager.beginTransaction();
-			delete(dbManager, object);
+			count = delete(dbManager, object);
 			dbManager.commitTransaction();
 		} catch (SQLException e) {
 			dbManager.rollbackTransaction();
@@ -246,27 +264,28 @@ public abstract class BaseService {
 		} finally {
 			dbManager.close();
 		}
+		return count;
 	}
 
 	/**
-	 * 删除一条记录
-	 * 
+	 * 删除一条记录并返回删除的结果条数
 	 * @param dbManager
 	 * @param object
-	 * @throws IOException 
-	 * @throws SQLException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws Exception
-	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 *             DateTime： Mar 7, 2017 8:41:51 AM
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws SQLException      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void delete(DBManager dbManager, Object object) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
+	public int delete(DBManager dbManager, Object object) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
 		AbstractDao abstractDao = getDao();
-		abstractDao.delete(dbManager, object);
+		return abstractDao.delete(dbManager, object);
 	}
 
 	/**
@@ -584,20 +603,22 @@ public abstract class BaseService {
 
 	/**
 	 * 更新一条记录
-	 * 
 	 * @param object
-	 * @throws IOException 
-	 * @throws SQLException, Exception 
-	 * @throws Exception
-	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 *             DateTime： Mar 7, 2017 8:53:36 AM
+	 * @return
+	 * @throws IOException
+	 * @throws SQLException
+	 * @throws Exception      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void update(Object object) throws IOException, SQLException, Exception{
+	public int update(Object object) throws IOException, SQLException, Exception{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
+		int count = 0;
 		try {
 			dbManager.openConnection();
 			dbManager.beginTransaction();
-			update(dbManager, object);
+			count = update(dbManager, object);
 			dbManager.commitTransaction();
 		} catch (Exception e) {
 			dbManager.rollbackTransaction();
@@ -605,113 +626,121 @@ public abstract class BaseService {
 		} finally {
 			dbManager.close();
 		}
+		return count;
 	}
 
 	/**
 	 * 更新一条记录
-	 * 
 	 * @param dbManager
 	 * @param object
-	 * @throws IOException 
-	 * @throws SQLException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws Exception
-	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 *             DateTime： Mar 7, 2017 8:53:47 AM
-	 */
-	public void update(DBManager dbManager, Object object) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException{
-		AbstractDao abstractDao = getDao();
-		abstractDao.update(dbManager, object);
-	}
-
-	/**
-	 * 执行SQL
-	 * 
-	 * @param strSql
-	 * @throws SQLException 
-	 * @throws Exception
-	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 *             DateTime： Mar 7, 2017 8:54:52 AM
-	 */
-	public void executeSql(String strSql) throws SQLException, Exception{
-		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
-		try {
-			dbManager.openConnection();
-			dbManager.beginTransaction();
-			executeSql(dbManager, strSql);
-			dbManager.commitTransaction();
-		} catch (SQLException e) {
-			dbManager.rollbackTransaction();
-			throw e;
-		} catch (Exception e) {
-			dbManager.rollbackTransaction();
-			throw e;
-		} finally {
-			dbManager.close();
-		}
-	}
-
-	/**
-	 * 执行SQL
-	 * 
-	 * @param dbManager
-	 * @param strSql
-	 * @throws SQLException 
-	 * @throws IOException 
-	 * @throws Exception
-	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 *             DateTime： Mar 7, 2017 8:55:07 AM
-	 */
-	public void executeSql(DBManager dbManager, String strSql) throws IOException, SQLException {
-		executeSql(dbManager, strSql, null);
-	}
-
-	/**
-	 * 执行SQL并传人参数
-	 * 
-	 * @param strSql
-	 * @param params
-	 * @throws Exception
-	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 *             DateTime： Mar 7, 2017 8:55:14 AM
-	 */
-	public void executeSql(String strSql, Object[] params) throws SQLException,Exception {
-		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
-		try {
-			dbManager.openConnection();
-			dbManager.beginTransaction();
-			executeSql(dbManager, strSql, params);
-			dbManager.commitTransaction();
-		} catch (SQLException e) {
-			dbManager.rollbackTransaction();
-			throw e;
-		} catch (Exception e) {
-			dbManager.rollbackTransaction();
-			throw e;
-		} finally {
-			dbManager.close();
-		}
-	}
-
-	/**
-	 * 执行SQL并传人参数
-	 * 
-	 * @param dbManager
-	 * @param strSql
-	 * @param params
+	 * @return
 	 * @throws IOException
-	 * @throws SQLException
-	 * @throws Exception
-	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 *             DateTime： Mar 7, 2017 8:55:38 AM
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws SQLException      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void executeSql(DBManager dbManager, String strSql, Object[] params) throws IOException, SQLException {
+	public int update(DBManager dbManager, Object object) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException{
 		AbstractDao abstractDao = getDao();
-		abstractDao.executeSql(dbManager, strSql, params);
+		return abstractDao.update(dbManager, object);
+	}
+
+	/**
+	 * 执行SQL
+	 * @param strSql
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
+	 */
+	public int executeSql(String strSql) throws SQLException, Exception{
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
+		int count = 0;
+		try {
+			dbManager.openConnection();
+			dbManager.beginTransaction();
+			count = executeSql(dbManager, strSql);
+			dbManager.commitTransaction();
+		} catch (SQLException e) {
+			dbManager.rollbackTransaction();
+			throw e;
+		} catch (Exception e) {
+			dbManager.rollbackTransaction();
+			throw e;
+		} finally {
+			dbManager.close();
+		}
+		return count;
+	}
+
+	/**
+	 * 执行SQL
+	 * @param dbManager
+	 * @param strSql
+	 * @return
+	 * @throws IOException
+	 * @throws SQLException      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
+	 */
+	public int executeSql(DBManager dbManager, String strSql) throws IOException, SQLException {
+		return executeSql(dbManager, strSql, null);
+	}
+
+	/**
+	 * 执行SQL并传人参数
+	 * @param strSql
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
+	 */
+	public int executeSql(String strSql, Object[] params) throws SQLException,Exception {
+		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
+		int count = 0;
+		try {
+			dbManager.openConnection();
+			dbManager.beginTransaction();
+			count = executeSql(dbManager, strSql, params);
+			dbManager.commitTransaction();
+		} catch (SQLException e) {
+			dbManager.rollbackTransaction();
+			throw e;
+		} catch (Exception e) {
+			dbManager.rollbackTransaction();
+			throw e;
+		} finally {
+			dbManager.close();
+		}
+		return count;
+	}
+
+	/**
+	 * 执行SQL并传人参数
+	 * @param dbManager
+	 * @param strSql
+	 * @param params
+	 * @return
+	 * @throws IOException
+	 * @throws SQLException      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
+	 */
+	public int executeSql(DBManager dbManager, String strSql, Object[] params) throws IOException, SQLException {
+		AbstractDao abstractDao = getDao();
+		return abstractDao.executeSql(dbManager, strSql, params);
 	}
 
 	/**

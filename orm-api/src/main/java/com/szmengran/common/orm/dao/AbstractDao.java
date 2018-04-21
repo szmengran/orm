@@ -27,17 +27,18 @@ import com.szmengran.common.reflect.ReflectHandler;
 public abstract class AbstractDao{
 
 	/**
-	 * 将数据插入到数据表中,主键从数据中生成
+	 * 将数据插入到数据表中，返回插入的成功条数
 	 * @param dbManager
 	 * @param object
 	 * @param primaryKeyType
 	 * @param seq_name
-	 * @throws Exception 
-	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
-	 * @createTime 2018年3月18日下午9:54:58
+	 * @return
+	 * @throws Exception      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void insert(DBManager dbManager, Object object, Integer primaryKeyType, String seq_name) throws Exception  {
+	public int insert(DBManager dbManager, Object object, Integer primaryKeyType, String seq_name) throws Exception  {
 		Map<String, Method> map = ReflectHandler.getFieldAndGetMethodFromObject(object);
 		Set<String> set = map.keySet();
 		StringBuffer sb = new StringBuffer();
@@ -74,7 +75,7 @@ public abstract class AbstractDao{
 				dbManager.setPrepareParameters(index++, value);
 			}
 		}
-		dbManager.executePrepare();
+		return dbManager.executePrepare();
 	}
 	
 	/**
@@ -139,28 +140,31 @@ public abstract class AbstractDao{
 	 * 批量插入事物提交
 	 * @param dbManager
 	 * @return
-	 * @throws SQLException
-	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * DateTime： Jan 19, 2017 4:58:12 PM
+	 * @throws SQLException      
+	 * @return: int  影响多少行   
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public boolean commitBatch(DBManager dbManager) throws SQLException {
+	public int commitBatch(DBManager dbManager) throws SQLException {
 		return dbManager.commitBatch();
 	}
+	
 	/**
-	 * 根据主键删除一条记录
+	 * 根据主键删除一条记录并返回删除的结果条数
 	 * @param dbManager
 	 * @param object
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws SQLException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws Exception
-	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * DateTime： Jan 19, 2017 4:58:04 PM
+	 * @return
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws SQLException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void delete(DBManager dbManager, Object object) throws NoSuchMethodException, SecurityException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public int delete(DBManager dbManager, Object object) throws NoSuchMethodException, SecurityException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Map<String, Method> map = ReflectHandler.getFieldAndGetMethodFromObject(object);
 		StringBuffer sb = new StringBuffer();
 		sb.append("DELETE FROM "+object.getClass().getSimpleName().toUpperCase()+" WHERE");
@@ -180,7 +184,7 @@ public abstract class AbstractDao{
 			Object value = method.invoke(object);
 			dbManager.setPrepareParameters(index++, value);
 		}
-		dbManager.executePrepare();
+		return dbManager.executePrepare();
 	}
 	
 	/**
@@ -361,17 +365,18 @@ public abstract class AbstractDao{
 	 * 更新数据信息
 	 * @param dbManager
 	 * @param object
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws SQLException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 * @throws Exception
-	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * DateTime： Jan 19, 2017 4:56:22 PM
+	 * @return
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws SQLException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void update(DBManager dbManager,Object object) throws NoSuchMethodException, SecurityException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public int update(DBManager dbManager,Object object) throws NoSuchMethodException, SecurityException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		Map<String, Method> map = ReflectHandler.getFieldAndGetMethodFromObject(object);
 		Set<String> set = map.keySet();
 		StringBuffer sb = new StringBuffer();
@@ -398,7 +403,7 @@ public abstract class AbstractDao{
 			Object value = method.invoke(object);
 			dbManager.setPrepareParameters(index++, value);
 		}
-		dbManager.executePrepare();
+		return dbManager.executePrepare();
 	}
 	/**
 	 * 根据主键查询一条数据
@@ -449,12 +454,13 @@ public abstract class AbstractDao{
 	 * @param dbManager
 	 * @param strSql
 	 * @param params
-	 * @throws SQLException 
-	 * @throws Exception
-	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * DateTime： Jan 19, 2017 4:56:39 PM
+	 * @return
+	 * @throws SQLException      
+	 * @return: int      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void executeSql(DBManager dbManager, String strSql, Object[] params) throws SQLException{
+	public int executeSql(DBManager dbManager, String strSql, Object[] params) throws SQLException{
 		dbManager.prepareStatement(strSql);
 		if(params != null){
 			int index = 1;
@@ -462,7 +468,7 @@ public abstract class AbstractDao{
 				dbManager.setPrepareParameters(index++, value);
 			}
 		}
-		dbManager.executePrepare();
+		return dbManager.executePrepare();
 	}
 	/**
 	 * 获取下一个主键值

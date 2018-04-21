@@ -102,8 +102,12 @@ public class DBManager {
 	 * 
 	 * @throws SQLException
 	 */
-	public void executePrepare() throws SQLException {
-		ps.execute();
+	public int executePrepare() throws SQLException {
+		Boolean flag = ps.execute();
+		if (!flag) {
+			return ps.getUpdateCount();
+		}
+		return 0;
 	}
 
 	/**
@@ -240,18 +244,19 @@ public class DBManager {
 	}
 
 	/**
-	 * 
-	 * @Description: 执行更新和删除操作
-	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * @date 2016年10月26日 下午1:51:48
-	 * 
+	 * 执行更新和删除操作
 	 * @param strSql
-	 * @throws SQLException
+	 * @return
+	 * @throws SQLException      
+	 * @return: int 影响的记录条数
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void execute(String strSql) throws SQLException {
+	public int execute(String strSql) throws SQLException {
 		try {
 			logger.debug(strSql);
 			sm.execute(strSql);
+			return sm.getUpdateCount();
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -268,6 +273,7 @@ public class DBManager {
 	 */
 	public void addBatch() throws SQLException {
 		ps.addBatch();
+		
 	}
 
 	/**
@@ -290,21 +296,21 @@ public class DBManager {
 	}
 
 	/**
-	 * 
-	 * @Description: 批量提交
-	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * @date 2016年10月26日 下午1:53:47
-	 * 
+	 * 批量提交
 	 * @return
-	 * @throws SQLException
+	 * @throws SQLException      
+	 * @return: int 影响多少行   
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public boolean commitBatch() throws SQLException {
+	public int commitBatch() throws SQLException {
 		if (ps != null) {
 			ps.executeBatch();
+			return ps.getUpdateCount();
 		} else {
 			sm.executeBatch();
+			return sm.getUpdateCount();
 		}
-		return true;
 	}
 
 	/**
