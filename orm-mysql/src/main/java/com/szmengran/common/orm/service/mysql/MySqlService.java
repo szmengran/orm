@@ -9,10 +9,13 @@ package com.szmengran.common.orm.service.mysql;
 
 import java.io.IOException;
 
+import org.springframework.stereotype.Service;
+
 import com.szmengran.common.orm.dao.AbstractDao;
 import com.szmengran.common.orm.dao.mysql.MySqlDao;
 import com.szmengran.common.service.BaseService;
 
+@Service("mysqlService")
 public class MySqlService extends BaseService{
 	@Override
 	public AbstractDao getDao() throws IOException {

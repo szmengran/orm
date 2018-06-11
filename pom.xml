@@ -18,9 +18,11 @@
 		<junit.version>4.11</junit.version>
 		<json.version>2.4</json.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		
+
 		<java.version>1.8</java.version>
 		<file_encoding>UTF-8</file_encoding>
+		
+		<spring.version>5.0.6.RELEASE</spring.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -56,6 +58,16 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

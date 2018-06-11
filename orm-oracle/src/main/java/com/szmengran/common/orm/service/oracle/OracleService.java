@@ -9,10 +9,13 @@ package com.szmengran.common.orm.service.oracle;
 
 import java.io.IOException;
 
+import org.springframework.stereotype.Service;
+
 import com.szmengran.common.orm.dao.AbstractDao;
 import com.szmengran.common.orm.dao.oracle.OracleDao;
 import com.szmengran.common.service.BaseService;
 
+@Service("oracleService")
 public class OracleService extends BaseService{
 	@Override
 	public AbstractDao getDao() throws IOException {
