@@ -34,11 +34,11 @@ public abstract class AbstractDao{
 	 * @param seq_name
 	 * @return
 	 * @throws Exception      
-	 * @return: int      
+	 * @return      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int insert(DBManager dbManager, Object object, Integer primaryKeyType, String seq_name) throws Exception  {
+	public void insert(DBManager dbManager, Object object, Integer primaryKeyType, String seq_name) throws Exception  {
 		Map<String, Method> map = ReflectHandler.getFieldAndGetMethodFromObject(object);
 		Set<String> set = map.keySet();
 		StringBuffer sb = new StringBuffer();
@@ -75,7 +75,7 @@ public abstract class AbstractDao{
 				dbManager.setPrepareParameters(index++, value);
 			}
 		}
-		return dbManager.executePrepare();
+		dbManager.executePrepare();
 	}
 	
 	/**
@@ -141,12 +141,12 @@ public abstract class AbstractDao{
 	 * @param dbManager
 	 * @return
 	 * @throws SQLException      
-	 * @return: int  影响多少行   
+	 * @return
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int commitBatch(DBManager dbManager) throws SQLException {
-		return dbManager.commitBatch();
+	public void commitBatch(DBManager dbManager) throws SQLException {
+		dbManager.commitBatch();
 	}
 	
 	/**
@@ -160,11 +160,11 @@ public abstract class AbstractDao{
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException      
-	 * @return: int      
+	 * @return     
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int delete(DBManager dbManager, Object object) throws NoSuchMethodException, SecurityException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void delete(DBManager dbManager, Object object) throws NoSuchMethodException, SecurityException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Map<String, Method> map = ReflectHandler.getFieldAndGetMethodFromObject(object);
 		StringBuffer sb = new StringBuffer();
 		sb.append("DELETE FROM "+object.getClass().getSimpleName().toUpperCase()+" WHERE");
@@ -184,7 +184,7 @@ public abstract class AbstractDao{
 			Object value = method.invoke(object);
 			dbManager.setPrepareParameters(index++, value);
 		}
-		return dbManager.executePrepare();
+		dbManager.executePrepare();
 	}
 	
 	/**
@@ -271,7 +271,7 @@ public abstract class AbstractDao{
 	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * DateTime： Jan 19, 2017 4:57:40 PM
 	 */
-	public <T> List<T> findByConditions(DBManager dbManager, T object, Map<String,Object> params, Integer startRow, Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+	public <T> List<T> findByConditions(DBManager dbManager, Class<T> clazz, Map<String,Object> params, Integer startRow, Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
 		StringBuffer conditions = new StringBuffer();
 		Object[] values = null;
 		if(params != null){
@@ -284,7 +284,7 @@ public abstract class AbstractDao{
 			}
 		}
 		
-		return findByConditions(dbManager, object, conditions, values, startRow, pageSize);
+		return findByConditions(dbManager, clazz, conditions, values, startRow, pageSize);
 	}
 
 	/**
@@ -300,15 +300,15 @@ public abstract class AbstractDao{
 	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * DateTime： Jan 19, 2017 4:57:23 PM
 	 */
-	public <T> List<T> findByConditions(DBManager dbManager, T object,StringBuffer conditions,Object[] params, Integer startRow,Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+	public <T> List<T> findByConditions(DBManager dbManager, Class<T> clazz,StringBuffer conditions,Object[] params, Integer startRow,Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
 		StringBuffer strSql = new StringBuffer();
 		strSql.append("SELECT * FROM ")
-		  .append(object.getClass().getSimpleName().toUpperCase())
+		  .append(clazz.getSimpleName().toUpperCase())
 		  .append(" WHERE").append(" 1 = 1");
 		if(conditions != null){
 			strSql.append(conditions);
 		}
-		return findByConditions(dbManager, object, strSql.toString(), params, startRow, pageSize);
+		return findByConditions(dbManager, clazz, strSql.toString(), params, startRow, pageSize);
 	}
 	/**
 	 * 根据SQL分页查询数据
@@ -330,8 +330,7 @@ public abstract class AbstractDao{
 	 * Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * DateTime： Mar 7, 2017 2:05:46 PM
 	 */
-	@SuppressWarnings("unchecked")
-	public <T> List<T> findByConditions(DBManager dbManager,T object,String strSql,Object[] params, Integer startRow,Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
+	public <T> List<T> findByConditions(DBManager dbManager,Class<T> clazz,String strSql,Object[] params, Integer startRow,Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException{
 		List<T> list = new ArrayList<T>();
 		if(pageSize != null){ //如果pageSize!=null说明传进来的参数有值，表示需要分页
 			dbManager.prepareStatement(getPageSql(strSql, startRow, pageSize));
@@ -346,7 +345,7 @@ public abstract class AbstractDao{
 		}
 		dbManager.executePrepareQuery();
 		while(dbManager.next()){
-			list.add((T)dbManager.setObjectValueByField(object.getClass().newInstance()));
+			list.add((T)dbManager.setObjectValueByField(clazz.newInstance()));
 		}
 		return list;
 	}
@@ -372,11 +371,10 @@ public abstract class AbstractDao{
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException      
-	 * @return: int      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int update(DBManager dbManager,Object object) throws NoSuchMethodException, SecurityException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public void update(DBManager dbManager,Object object) throws NoSuchMethodException, SecurityException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		Map<String, Method> map = ReflectHandler.getFieldAndGetMethodFromObject(object);
 		Set<String> set = map.keySet();
 		StringBuffer sb = new StringBuffer();
@@ -403,7 +401,7 @@ public abstract class AbstractDao{
 			Object value = method.invoke(object);
 			dbManager.setPrepareParameters(index++, value);
 		}
-		return dbManager.executePrepare();
+		dbManager.executePrepare();
 	}
 	/**
 	 * 根据主键查询一条数据
@@ -454,9 +452,8 @@ public abstract class AbstractDao{
 	 * @param dbManager
 	 * @param strSql
 	 * @param params
-	 * @return
+	 * @return: int
 	 * @throws SQLException      
-	 * @return: int      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */

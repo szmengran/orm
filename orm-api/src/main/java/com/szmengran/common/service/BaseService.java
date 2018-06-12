@@ -61,14 +61,15 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午10:19:08
 	 */
-	public void save(Object object) throws IOException, SQLException, Exception{
-		save(object, null, null);
+	public void insert(Object object) throws IOException, SQLException, Exception{
+		insert(object, null, null);
 	}
 
 	/**
 	 * 保存一条记录
 	 * @param dbManager
 	 * @param object
+	 * @return 
 	 * @throws IOException
 	 * @throws SQLException
 	 * @throws Exception 
@@ -76,8 +77,8 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午10:19:19
 	 */
-	public void save(DBManager dbManager, Object object) throws IOException, SQLException, Exception{
-		save(dbManager, object, null, null);
+	public void insert(DBManager dbManager, Object object) throws IOException, SQLException, Exception{
+		insert(dbManager, object, null, null);
 	}
 	
 	/**
@@ -87,12 +88,11 @@ public abstract class BaseService {
 	 * @throws IOException
 	 * @throws SQLException
 	 * @throws Exception      
-	 * @return: void      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void save(Object object, Integer primaryKeyType) throws IOException, SQLException, Exception{
-		save(object, primaryKeyType, null);
+	public void insert(Object object, Integer primaryKeyType) throws IOException, SQLException, Exception{
+		insert(object, primaryKeyType, null);
 	}
 	/**
 	 * 保存一条记录
@@ -106,12 +106,12 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午10:19:13
 	 */
-	public void save(Object object, Integer primaryKeyType, String seq_name) throws IOException, SQLException, Exception{
+	public void insert(Object object, Integer primaryKeyType, String seq_name) throws IOException, SQLException, Exception{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
 		try {
 			dbManager.openConnection();
 			dbManager.beginTransaction();
-			save(dbManager, object, primaryKeyType, seq_name);
+			insert(dbManager, object, primaryKeyType, seq_name);
 			dbManager.commitTransaction();
 		} catch (SQLException e) {
 			dbManager.rollbackTransaction();
@@ -130,12 +130,12 @@ public abstract class BaseService {
 	 * @param object
 	 * @param primaryKeyType
 	 * @param seq_name
-	 * @throws Exception 
-	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
-	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
-	 * @createTime 2018年3月18日下午10:19:26
+	 * @return
+	 * @throws Exception      
+	 * @throws   
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void save(DBManager dbManager, Object object, Integer primaryKeyType, String seq_name) throws Exception{
+	public void insert(DBManager dbManager, Object object, Integer primaryKeyType, String seq_name) throws Exception{
 		AbstractDao abstractDao = getDao();
 		abstractDao.insert(dbManager, object, primaryKeyType, seq_name);
 	}
@@ -247,13 +247,12 @@ public abstract class BaseService {
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int delete(Object object) throws IOException, SQLException, Exception{
+	public void delete(Object object) throws IOException, SQLException, Exception{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
-		int count = 0;
 		try {
 			dbManager.openConnection();
 			dbManager.beginTransaction();
-			count = delete(dbManager, object);
+			delete(dbManager, object);
 			dbManager.commitTransaction();
 		} catch (SQLException e) {
 			dbManager.rollbackTransaction();
@@ -264,7 +263,6 @@ public abstract class BaseService {
 		} finally {
 			dbManager.close();
 		}
-		return count;
 	}
 
 	/**
@@ -279,13 +277,12 @@ public abstract class BaseService {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 * @throws SQLException      
-	 * @return: int      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int delete(DBManager dbManager, Object object) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
+	public void delete(DBManager dbManager, Object object) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException {
 		AbstractDao abstractDao = getDao();
-		return abstractDao.delete(dbManager, object);
+		abstractDao.delete(dbManager, object);
 	}
 
 	/**
@@ -299,8 +296,8 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:46:24
 	 */
-	public <T>List<T> findByConditions(T object, Map<String, Object> params) throws SQLException, Exception {
-		return findByConditions(object, params, null, null);
+	public <T>List<T> findByConditions(Class<T> clazz, Map<String, Object> params) throws SQLException, Exception {
+		return findByConditions(clazz, params, null, null);
 	}
 
 	/**
@@ -316,12 +313,12 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:46:03
 	 */
-	public <T>List<T> findByConditions(T object, Map<String, Object> params, Integer startRow, Integer pageSize) throws SQLException, Exception
+	public <T>List<T> findByConditions(Class<T> clazz, Map<String, Object> params, Integer startRow, Integer pageSize) throws SQLException, Exception
 			{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
 			dbManager.openConnection();
-			return findByConditions(dbManager, object, params, null, null);
+			return findByConditions(dbManager, clazz, params, null, null);
 		} finally {
 			dbManager.close();
 		}
@@ -347,10 +344,10 @@ public abstract class BaseService {
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public <T>List<T> findByConditions(DBManager dbManager, T object, Map<String, Object> params,
+	public <T>List<T> findByConditions(DBManager dbManager, Class<T> clazz, Map<String, Object> params,
 			Integer startRow, Integer pageSize) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, SQLException {
 		AbstractDao abstractDao = getDao();
-		return abstractDao.findByConditions(dbManager, object, params, startRow, pageSize);
+		return abstractDao.findByConditions(dbManager, clazz, params, startRow, pageSize);
 	}
 
 	/**
@@ -365,8 +362,8 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:45:04
 	 */
-	public <T>List<T> findByConditions(T object, StringBuffer conditions, Object[] params) throws SQLException, Exception {
-		return findByConditions(object, conditions, params, null, null).getList();
+	public <T>List<T> findByConditions(Class<T> clazz, StringBuffer conditions, Object[] params) throws SQLException, Exception {
+		return findByConditions(clazz, conditions, params, null, null).getList();
 	}
 
 	/**
@@ -383,18 +380,18 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:44:43
 	 */
-	public <T>PageInfo<T> findByConditions(T object, StringBuffer conditions, Object[] params, String strPage,
+	public <T>PageInfo<T> findByConditions(Class<T> clazz, StringBuffer conditions, Object[] params, String strPage,
 			String strPageSize) throws SQLException, Exception {
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
 			dbManager.openConnection();
 			StringBuffer strSql = new StringBuffer();
-			strSql.append("SELECT * FROM ").append(object.getClass().getSimpleName().toUpperCase())
+			strSql.append("SELECT * FROM ").append(clazz.getSimpleName().toUpperCase())
 					.append(" WHERE 1=1 ");
 			if (conditions != null) {
 				strSql.append(conditions);
 			}
-			return findBySql(dbManager, object, strSql.toString(), params, strPage, strPageSize);
+			return findBySql(dbManager, clazz, strSql.toString(), params, strPage, strPageSize);
 		} finally {
 			dbManager.close();
 		}
@@ -415,18 +412,18 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:43:55
 	 */
-	public <T>PageInfo<T> findByConditions(T object, StringBuffer conditions, String orderby, Object[] params,
+	public <T>PageInfo<T> findByConditions(Class<T> clazz, StringBuffer conditions, String orderby, Object[] params,
 			String strPage, String strPageSize) throws SQLException, Exception {
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
 			dbManager.openConnection();
 			StringBuffer strSql = new StringBuffer();
-			strSql.append("SELECT * FROM ").append(object.getClass().getSimpleName().toUpperCase())
+			strSql.append("SELECT * FROM ").append(clazz.getSimpleName().toUpperCase())
 					.append(" WHERE 1=1 ");
 			if (conditions != null) {
 				strSql.append(conditions);
 			}
-			return findBySql(dbManager, object, strSql.toString(), orderby, params, strPage, strPageSize);
+			return findBySql(dbManager, clazz, strSql.toString(), orderby, params, strPage, strPageSize);
 		} finally {
 			dbManager.close();
 		}
@@ -444,8 +441,8 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:43:21
 	 */
-	public <T>List<T> findBySql(T object, String strSql, Object[] params) throws SQLException, Exception {
-		return findBySql(object, strSql, params, null, null).getList();
+	public <T>List<T> findBySql(Class<T> clazz, String strSql, Object[] params) throws SQLException, Exception {
+		return findBySql(clazz, strSql, params, null, null).getList();
 	}
 
 	/**
@@ -462,12 +459,12 @@ public abstract class BaseService {
 	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 *             DateTime： Mar 7, 2017 8:49:19 AM
 	 */
-	public <T>PageInfo<T> findBySql(T object, String strSql, Object[] params, String strPage, String strPageSize) throws SQLException, Exception
+	public <T>PageInfo<T> findBySql(Class<T> clazz, String strSql, Object[] params, String strPage, String strPageSize) throws SQLException, Exception
 			{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_READ);
 		try {
 			dbManager.openConnection();
-			return findBySql(dbManager, object, strSql, params, strPage, strPageSize);
+			return findBySql(dbManager, clazz, strSql, params, strPage, strPageSize);
 		} finally {
 			dbManager.close();
 		}
@@ -494,7 +491,7 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:42:23
 	 */
-	public <T>PageInfo<T> findBySql(DBManager dbManager, T object, String strSql, Object[] params, String strPage,
+	public <T>PageInfo<T> findBySql(DBManager dbManager, Class<T> clazz, String strSql, Object[] params, String strPage,
 			String strPageSize) throws IOException, SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		AbstractDao abstractDao = getDao();
 		PageInfo<T> pageInfo = new PageInfo<T>();
@@ -509,7 +506,7 @@ public abstract class BaseService {
 			pageInfo.setTotal(total);
 			startRow = (page - 1 <= 0 ? 0 : page - 1) * pageSize;
 		}
-		List<T> list = abstractDao.findByConditions(dbManager, object, strSql, params, startRow, pageSize);
+		List<T> list = abstractDao.findByConditions(dbManager, clazz, strSql, params, startRow, pageSize);
 		pageInfo.setList(list);
 		return pageInfo;
 	}
@@ -536,7 +533,7 @@ public abstract class BaseService {
 	 * Copyright (c) 2018, 深圳市梦燃科技有限公司 All Rights Reserved. 
 	 * @createTime 2018年3月18日下午4:41:38
 	 */
-	public <T>PageInfo<T> findBySql(DBManager dbManager, T object, String strSql, String orderby, Object[] params,
+	public <T>PageInfo<T> findBySql(DBManager dbManager, Class<T> clazz, String strSql, String orderby, Object[] params,
 			String strPage, String strPageSize) throws IOException, SQLException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		AbstractDao abstractDao = getDao();
 		PageInfo<T> pageInfo = new PageInfo<T>();
@@ -551,7 +548,7 @@ public abstract class BaseService {
 			pageInfo.setTotal(total);
 			startRow = (page - 1 <= 0 ? 0 : page - 1) * pageSize;
 		}
-		List<T> list = abstractDao.findByConditions(dbManager, object, strSql + orderby, params, startRow,
+		List<T> list = abstractDao.findByConditions(dbManager, clazz, strSql + orderby, params, startRow,
 				pageSize);
 		pageInfo.setList(list);
 		return pageInfo;
@@ -608,17 +605,15 @@ public abstract class BaseService {
 	 * @throws IOException
 	 * @throws SQLException
 	 * @throws Exception      
-	 * @return: int      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int update(Object object) throws IOException, SQLException, Exception{
+	public void update(Object object) throws IOException, SQLException, Exception{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
-		int count = 0;
 		try {
 			dbManager.openConnection();
 			dbManager.beginTransaction();
-			count = update(dbManager, object);
+			update(dbManager, object);
 			dbManager.commitTransaction();
 		} catch (Exception e) {
 			dbManager.rollbackTransaction();
@@ -626,7 +621,6 @@ public abstract class BaseService {
 		} finally {
 			dbManager.close();
 		}
-		return count;
 	}
 
 	/**
@@ -641,13 +635,12 @@ public abstract class BaseService {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 * @throws SQLException      
-	 * @return: int      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int update(DBManager dbManager, Object object) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException{
+	public void update(DBManager dbManager, Object object) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException{
 		AbstractDao abstractDao = getDao();
-		return abstractDao.update(dbManager, object);
+		abstractDao.update(dbManager, object);
 	}
 
 	/**
@@ -660,13 +653,12 @@ public abstract class BaseService {
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int executeSql(String strSql) throws SQLException, Exception{
+	public void executeSql(String strSql) throws SQLException, Exception{
 		DBManager dbManager = getDBManager(Constants.DATASOURCE_WRITE);
-		int count = 0;
 		try {
 			dbManager.openConnection();
 			dbManager.beginTransaction();
-			count = executeSql(dbManager, strSql);
+			executeSql(dbManager, strSql);
 			dbManager.commitTransaction();
 		} catch (SQLException e) {
 			dbManager.rollbackTransaction();
@@ -677,7 +669,6 @@ public abstract class BaseService {
 		} finally {
 			dbManager.close();
 		}
-		return count;
 	}
 
 	/**
@@ -687,22 +678,20 @@ public abstract class BaseService {
 	 * @return
 	 * @throws IOException
 	 * @throws SQLException      
-	 * @return: int      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int executeSql(DBManager dbManager, String strSql) throws IOException, SQLException {
-		return executeSql(dbManager, strSql, null);
+	public void executeSql(DBManager dbManager, String strSql) throws IOException, SQLException {
+		executeSql(dbManager, strSql, null);
 	}
 
 	/**
 	 * 执行SQL并传人参数
 	 * @param strSql
 	 * @param params
-	 * @return
+	 * @return: int
 	 * @throws SQLException
 	 * @throws Exception      
-	 * @return: int      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
@@ -731,10 +720,9 @@ public abstract class BaseService {
 	 * @param dbManager
 	 * @param strSql
 	 * @param params
-	 * @return
+	 * @return: int
 	 * @throws IOException
 	 * @throws SQLException      
-	 * @return: int      
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */

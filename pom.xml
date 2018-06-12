@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.szmengran</groupId>
 	<artifactId>orm</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>orm-api</module>
@@ -39,8 +39,8 @@
 			</dependency>
 			<dependency>
 				<groupId>com.oracle</groupId>
-				<artifactId>ojdbc14</artifactId>
-				<version>${oracle.version}</version>
+				<artifactId>ojdbc</artifactId>
+				<version>12.2.0.1</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>

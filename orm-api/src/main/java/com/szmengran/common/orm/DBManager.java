@@ -99,15 +99,12 @@ public class DBManager {
 	 * @Description: 封装PrppareStatement的execute方法
 	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * @date 2016年10月26日 下午1:46:23
-	 * 
+	 * @return: int
 	 * @throws SQLException
 	 */
 	public int executePrepare() throws SQLException {
-		Boolean flag = ps.execute();
-		if (!flag) {
-			return ps.getUpdateCount();
-		}
-		return 0;
+		ps.execute();
+		return ps.getUpdateCount();
 	}
 
 	/**
@@ -248,15 +245,14 @@ public class DBManager {
 	 * @param strSql
 	 * @return
 	 * @throws SQLException      
-	 * @return: int 影响的记录条数
+	 * @return
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int execute(String strSql) throws SQLException {
+	public void execute(String strSql) throws SQLException {
 		try {
 			logger.debug(strSql);
 			sm.execute(strSql);
-			return sm.getUpdateCount();
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -303,13 +299,11 @@ public class DBManager {
 	 * @throws   
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public int commitBatch() throws SQLException {
+	public void commitBatch() throws SQLException {
 		if (ps != null) {
 			ps.executeBatch();
-			return ps.getUpdateCount();
 		} else {
 			sm.executeBatch();
-			return sm.getUpdateCount();
 		}
 	}
 
