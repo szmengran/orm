@@ -74,8 +74,8 @@ public class DBManager {
 	 */
 	public void prepareStatement(String strSql) throws SQLException {
 		try {
-			logger.debug(strSql);
 			ps = conn.prepareStatement(strSql);
+			logger.debug(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -118,8 +118,8 @@ public class DBManager {
 	 */
 	public void prepareCall(String strSql) throws SQLException {
 		try {
-			logger.debug(strSql);
 			cStmt = conn.prepareCall(strSql);
+			logger.debug(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -230,9 +230,9 @@ public class DBManager {
 	 */
 	public ResultSet executeQuery(String strSql) throws SQLException {
 		try {
-			logger.debug(strSql);
 			ps = conn.prepareStatement(strSql);
 			rs = ps.executeQuery();
+			logger.debug(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -251,8 +251,8 @@ public class DBManager {
 	 */
 	public void execute(String strSql) throws SQLException {
 		try {
-			logger.debug(strSql);
 			sm.execute(strSql);
+			logger.debug(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -283,8 +283,8 @@ public class DBManager {
 	 */
 	public void addBatch(String strSql) throws SQLException {
 		try {
-			logger.debug(strSql);
 			sm.addBatch(strSql);
+			logger.debug(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;

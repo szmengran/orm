@@ -1,8 +1,7 @@
 package com.szmengran.common.orm.dao.mysql;
 
-import javax.sql.DataSource;
+import org.springframework.stereotype.Service;
 
-import com.szmengran.common.orm.DBManager;
 import com.szmengran.common.orm.dao.AbstractDao;
 
 /**
@@ -10,17 +9,9 @@ import com.szmengran.common.orm.dao.AbstractDao;
  * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
  * @creaetTime 2014-7-30 下午8:54:11
  */
+@Service("mySqlDao")
 public class MySqlDao extends AbstractDao{
-	public DBManager getDBManager(DataSource dataSource){
-		return new DBManager(dataSource);
-	}
-	private MySqlDao(){
-		
-	}
-	private static MySqlDao instance = new MySqlDao();
-	public static MySqlDao getInstance(){
-		return instance;
-	}
+	
 	@Override
 	public String getPageSql(String strSql, int startRow, int pageSize) {
 		StringBuffer sb = new StringBuffer();
