@@ -812,7 +812,10 @@ public abstract class AbstractDao {
 			pageInfo.setTotal(total);
 			startRow = (page - 1 <= 0 ? 0 : page - 1) * pageSize;
 		}
-		List<T> list = findByConditions(dbManager, clazz, strSql + orderby, params, startRow, pageSize);
+		if(orderby != null) {
+			strSql = strSql+orderby;
+		}
+		List<T> list = findByConditions(dbManager, clazz, strSql, params, startRow, pageSize);
 		pageInfo.setList(list);
 		return pageInfo;
 	}
