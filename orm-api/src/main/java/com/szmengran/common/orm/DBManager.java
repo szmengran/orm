@@ -75,7 +75,7 @@ public class DBManager {
 	public void prepareStatement(String strSql) throws SQLException {
 		try {
 			ps = conn.prepareStatement(strSql);
-			logger.debug(strSql);
+			logger.info(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -119,7 +119,7 @@ public class DBManager {
 	public void prepareCall(String strSql) throws SQLException {
 		try {
 			cStmt = conn.prepareCall(strSql);
-			logger.debug(strSql);
+			logger.info(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -149,7 +149,7 @@ public class DBManager {
 	 * @throws SQLException
 	 */
 	public void setPrepareCallParameters(String key, Object value) throws SQLException {
-		logger.debug("key:" + key + ",value:" + value);
+		logger.info("key:" + key + ",value:" + value);
 		if (value instanceof Integer) {
 			cStmt.setInt(key, (Integer) value);
 		} else if (value instanceof Double) {
@@ -174,7 +174,7 @@ public class DBManager {
 	 * @throws SQLException
 	 */
 	public void registerPrepareCallOutParameters(int key, Object type) throws SQLException {
-		logger.debug("key:" + key + ",type:" + type);
+		logger.info("key:" + key + ",type:" + type);
 		if (type instanceof Integer) {
 			cStmt.registerOutParameter(key, Types.INTEGER);
 		} else if (type instanceof Double) {
@@ -202,7 +202,7 @@ public class DBManager {
 	 * @throws SQLException
 	 */
 	public Object getPrepareCallOutParameters(int key, Object type) throws SQLException {
-		logger.debug("key:" + key + ",type:" + type);
+		logger.info("key:" + key + ",type:" + type);
 		if (type instanceof Integer) {
 			return cStmt.getInt(key);
 		} else if (type instanceof Double) {
@@ -232,7 +232,7 @@ public class DBManager {
 		try {
 			ps = conn.prepareStatement(strSql);
 			rs = ps.executeQuery();
-			logger.debug(strSql);
+			logger.info(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -252,7 +252,7 @@ public class DBManager {
 	public void execute(String strSql) throws SQLException {
 		try {
 			sm.execute(strSql);
-			logger.debug(strSql);
+			logger.info(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -284,7 +284,7 @@ public class DBManager {
 	public void addBatch(String strSql) throws SQLException {
 		try {
 			sm.addBatch(strSql);
-			logger.debug(strSql);
+			logger.info(strSql);
 		} catch (SQLException e) {
 			logger.error(strSql);
 			throw e;
@@ -435,7 +435,7 @@ public class DBManager {
 	 */
 	public void setString(int index, String value) throws SQLException {
 		value = value.trim();
-		logger.debug(index + "-" + value);
+		logger.info(index + "-" + value);
 		ps.setString(index, value);
 	}
 
@@ -449,7 +449,7 @@ public class DBManager {
 	 * @ModifyTime 2014-8-3 上午11:19:44
 	 */
 	public void setInt(int index, int value) throws SQLException {
-		logger.debug(index + "-" + value);
+		logger.info(index + "-" + value);
 		ps.setInt(index, value);
 	}
 
@@ -463,7 +463,7 @@ public class DBManager {
 	 * @ModifyTime 2014-8-3 上午11:19:35
 	 */
 	public void setLong(int index, long value) throws SQLException {
-		logger.debug(index + "-" + value);
+		logger.info(index + "-" + value);
 		ps.setLong(index, value);
 	}
 
@@ -477,7 +477,7 @@ public class DBManager {
 	 * @ModifyTime 2014-8-3 上午11:19:24
 	 */
 	public void setDouble(int index, double value) throws SQLException {
-		logger.debug(index + "-" + value);
+		logger.info(index + "-" + value);
 		ps.setDouble(index, value);
 	}
 
@@ -491,7 +491,7 @@ public class DBManager {
 	 * @ModifyTime 2014-8-3 上午11:19:14
 	 */
 	public void setTimestamp(int index, Date value) throws SQLException {
-		logger.debug(index + "-" + value);
+		logger.info(index + "-" + value);
 		ps.setTimestamp(index, new Timestamp(value.getTime()));
 	}
 
@@ -505,7 +505,7 @@ public class DBManager {
 	 * @ModifyTime 2014-8-3 上午11:19:04
 	 */
 	public void setBytes(int index, byte value[]) throws SQLException {
-		logger.debug(index + "-" + value);
+		logger.info(index + "-" + value);
 		ps.setBytes(index, value);
 	}
 
@@ -675,7 +675,7 @@ public class DBManager {
 	 * @ModifyTime 2014-8-3 上午11:13:31
 	 */
 	public void setPrepareParameters(int index, Object value) throws SQLException {
-		logger.debug("index:" + index + ",value:" + value);
+		logger.info("index:" + index + ",value:" + value);
 		if (value instanceof Integer) {
 			ps.setInt(index, (Integer) value);
 		} else if (value instanceof Double) {

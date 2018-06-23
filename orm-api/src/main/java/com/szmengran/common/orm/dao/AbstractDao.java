@@ -710,6 +710,21 @@ public abstract class AbstractDao {
 	public <T> List<T> findBySql(Class<T> clazz, String strSql, Object[] params) throws SQLException, Exception {
 		return findBySql(clazz, strSql, params, null, null).getList();
 	}
+	
+	/**
+	 * 根据SQL查找记录
+	 * @param dbManager
+	 * @param clazz
+	 * @param strSql
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception 
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
+	 */
+	public <T> List<T> findBySql(DBManager dbManager, Class<T> clazz, String strSql, Object[] params) throws SQLException, Exception {
+		return findBySql(dbManager, clazz, strSql, params, null, null).getList();
+	}
 
 	/**
 	 * 根据SQL分页查找记录
