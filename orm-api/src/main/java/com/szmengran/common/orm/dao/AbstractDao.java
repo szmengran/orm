@@ -104,8 +104,9 @@ public abstract class AbstractDao {
 	 */
 	public void insert(Object object, DbPrimaryKeyType primaryKeyType, String seq_name)
 			throws IOException, SQLException, Exception {
-		DBManager dbManager = new DBManager(writeDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(writeDataSource);
 			dbManager.openConnection();
 			dbManager.beginTransaction();
 			insert(dbManager, object, primaryKeyType, seq_name);
@@ -223,8 +224,9 @@ public abstract class AbstractDao {
 	 *             <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
 	public void addBatch(List<?> list, DbPrimaryKeyType primaryKeyType, String seq_name) throws Exception {
-		DBManager dbManager = new DBManager(writeDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(writeDataSource);
 			dbManager.openConnection();
 			dbManager.beginTransaction();
 			addBatch(dbManager, list, primaryKeyType, seq_name);
@@ -330,8 +332,9 @@ public abstract class AbstractDao {
 	 *             <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
 	public void delete(Object object) throws IOException, SQLException, Exception {
-		DBManager dbManager = new DBManager(writeDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(writeDataSource);
 			dbManager.openConnection();
 			dbManager.beginTransaction();
 			delete(dbManager, object);
@@ -398,8 +401,9 @@ public abstract class AbstractDao {
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
 	public int count(String strSql, Object[] params) throws SQLException, Exception {
-		DBManager dbManager = new DBManager(readDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(readDataSource);
 			dbManager.openConnection();
 			return count(dbManager, strSql, params);
 		} finally {
@@ -500,6 +504,21 @@ public abstract class AbstractDao {
 	}
 
 	/**
+	 * 根据条件查找记录
+	 * @param dbManager
+	 * @param clazz
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception 
+	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
+	 */
+	public <T> List<T> findByConditions(DBManager dbManager, Class<T> clazz, Map<String, Object> params)
+			throws SQLException, Exception {
+		return findByConditions(dbManager, clazz, params, null, null);
+	}
+	
+	/**
 	 * 根据条件分页查找记录
 	 * 
 	 * @param object
@@ -515,10 +534,11 @@ public abstract class AbstractDao {
 	 */
 	public <T> List<T> findByConditions(Class<T> clazz, Map<String, Object> params, Integer startRow, Integer pageSize)
 			throws SQLException, Exception {
-		DBManager dbManager = new DBManager(readDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(readDataSource);
 			dbManager.openConnection();
-			return findByConditions(dbManager, clazz, params, null, null);
+			return findByConditions(dbManager, clazz, params, startRow, pageSize);
 		} finally {
 			dbManager.close();
 		}
@@ -580,8 +600,9 @@ public abstract class AbstractDao {
 	 */
 	public <T> PageInfo<T> findByConditions(Class<T> clazz, StringBuffer conditions, String orderby, Object[] params,
 			Integer strPage, Integer strPageSize) throws SQLException, Exception {
-		DBManager dbManager = new DBManager(readDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(readDataSource);
 			dbManager.openConnection();
 			StringBuffer strSql = new StringBuffer();
 			strSql.append("SELECT * FROM ").append(clazz.getSimpleName().toUpperCase()).append(" WHERE 1=1 ");
@@ -742,8 +763,9 @@ public abstract class AbstractDao {
 	 */
 	public <T> PageInfo<T> findBySql(Class<T> clazz, String strSql, Object[] params, Integer page, Integer pageSize)
 			throws SQLException, Exception {
-		DBManager dbManager = new DBManager(readDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(readDataSource);
 			dbManager.openConnection();
 			return findBySql(dbManager, clazz, strSql, params, page, pageSize);
 		} finally {
@@ -858,8 +880,9 @@ public abstract class AbstractDao {
 	 *             <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
 	public void update(Object object) throws IOException, SQLException, Exception {
-		DBManager dbManager = new DBManager(writeDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(writeDataSource);
 			dbManager.openConnection();
 			dbManager.beginTransaction();
 			update(dbManager, object);
@@ -929,8 +952,9 @@ public abstract class AbstractDao {
 	 *             DateTime： Mar 7, 2017 8:56:11 AM
 	 */
 	public <T> T findByPrimaryKey(T object) throws SQLException, Exception {
-		DBManager dbManager = new DBManager(writeDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(writeDataSource);
 			dbManager.openConnection();
 			return findByPrimaryKey(dbManager, object);
 		} finally {
@@ -1026,9 +1050,10 @@ public abstract class AbstractDao {
 	 *             <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
 	public int executeSql(String strSql, Object[] params) throws SQLException, Exception {
-		DBManager dbManager = new DBManager(writeDataSource);
+		DBManager dbManager = null;
 		int count = 0;
 		try {
+			dbManager = new DBManager(writeDataSource);
 			dbManager.openConnection();
 			dbManager.beginTransaction();
 			count = executeSql(dbManager, strSql, params);
@@ -1129,8 +1154,9 @@ public abstract class AbstractDao {
 	 * @author <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
 	public byte[] findByteFromBlob(String strSql, Object[] params) throws SQLException, Exception {
-		DBManager dbManager = new DBManager(readDataSource);
+		DBManager dbManager = null;
 		try {
+			dbManager = new DBManager(readDataSource);
 			dbManager.openConnection();
 			return findByteFromBlob(dbManager, strSql, params);
 		} finally {
@@ -1178,5 +1204,36 @@ public abstract class AbstractDao {
 			imgData = image.getBytes(1, (int) image.length());
 		}
 		return imgData;
+	}
+	
+	public Object[] prepareCall(String strSql, Object[] params, int[] output) throws Exception {
+		DBManager dbManager = null;
+		try {
+			dbManager = new DBManager(writeDataSource);
+			dbManager.openConnection();
+			dbManager.beginTransaction();
+			Object[] obj = prepareCall(dbManager, strSql, params, output);
+			dbManager.commitTransaction();
+			return obj;
+		} finally {
+			dbManager.close();
+		}
+	}
+	
+	public Object[] prepareCall(DBManager dbManager, String strSql, Object[] params, int[] output) throws Exception {
+		dbManager.prepareCall(strSql);
+		int index = 1;
+		for (int i = 0; i < params.length; i++) {
+			dbManager.setPrepareCallParameters(index++, params[i]);
+		}
+		for (int i = 0; i < output.length; i++) {
+			dbManager.registerPrepareCallOutParameters(index+i, output[i]);
+		}
+		dbManager.executePrepareCall();
+		Object[] obj = new Object[output.length];
+		for (int i = 0; i < output.length; i++) {
+			obj[i] = dbManager.getPrepareCallOutParameters(index+i, output[i]);
+		}
+		return obj;
 	}
 }

@@ -144,22 +144,22 @@ public class DBManager {
 	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * @date 2016年10月26日 下午1:47:24
 	 * 
-	 * @param key
+	 * @param index
 	 * @param value
 	 * @throws SQLException
 	 */
-	public void setPrepareCallParameters(String key, Object value) throws SQLException {
-		logger.info("key:" + key + ",value:" + value);
+	public void setPrepareCallParameters(int index, Object value) throws SQLException {
+		logger.info("index:" + index + ",value:" + value);
 		if (value instanceof Integer) {
-			cStmt.setInt(key, (Integer) value);
+			cStmt.setInt(index, (Integer) value);
 		} else if (value instanceof Double) {
-			cStmt.setDouble(key, Double.parseDouble(value.toString()));
+			cStmt.setDouble(index, Double.parseDouble(value.toString()));
 		} else if (value instanceof Date) {
-			cStmt.setTimestamp(key, new java.sql.Timestamp(((Date) value).getTime()));
+			cStmt.setTimestamp(index, new java.sql.Timestamp(((Date) value).getTime()));
 		} else if (value instanceof Long) {
-			cStmt.setLong(key, ((Long) value).longValue());
+			cStmt.setLong(index, ((Long) value).longValue());
 		} else {
-			cStmt.setString(key, (String) value);
+			cStmt.setString(index, (String) value);
 		}
 	}
 
@@ -169,25 +169,13 @@ public class DBManager {
 	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * @date 2016年10月26日 下午1:47:43
 	 * 
-	 * @param key
+	 * @param index
 	 * @param type
 	 * @throws SQLException
 	 */
-	public void registerPrepareCallOutParameters(int key, Object type) throws SQLException {
-		logger.info("key:" + key + ",type:" + type);
-		if (type instanceof Integer) {
-			cStmt.registerOutParameter(key, Types.INTEGER);
-		} else if (type instanceof Double) {
-			cStmt.registerOutParameter(key, Types.DOUBLE);
-		} else if (type instanceof ResultSet) {
-			cStmt.registerOutParameter(key, Types.ARRAY);
-		} else if (type instanceof Long) {
-			cStmt.registerOutParameter(key, Types.BIGINT);
-		} else if (type instanceof Boolean) {
-			cStmt.registerOutParameter(key, Types.BOOLEAN);
-		} else {
-			cStmt.registerOutParameter(key, Types.CHAR);
-		}
+	public void registerPrepareCallOutParameters(int index, int type) throws SQLException {
+		logger.info("index:" + index + ",type:" + type);
+		cStmt.registerOutParameter(index, type);
 	}
 
 	/**
@@ -196,25 +184,25 @@ public class DBManager {
 	 * @author <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 * @date 2016年10月26日 下午1:49:19
 	 * 
-	 * @param key
+	 * @param index
 	 * @param type
 	 * @return
 	 * @throws SQLException
 	 */
-	public Object getPrepareCallOutParameters(int key, Object type) throws SQLException {
-		logger.info("key:" + key + ",type:" + type);
-		if (type instanceof Integer) {
-			return cStmt.getInt(key);
-		} else if (type instanceof Double) {
-			return cStmt.getDouble(key);
-		} else if (type instanceof ResultSet) {
-			return cStmt.getArray(key);
-		} else if (type instanceof Long) {
-			return cStmt.getLong(key);
-		} else if (type instanceof Boolean) {
-			return cStmt.getBoolean(key);
+	public Object getPrepareCallOutParameters(int index, int type) throws SQLException {
+		logger.info("index:" + index + ",type:" + type);
+		if (type == Types.INTEGER) {
+			return cStmt.getInt(index);
+		} else if (type == Types.DOUBLE) {
+			return cStmt.getDouble(index);
+		} else if (type == Types.ARRAY) {
+			return cStmt.getArray(index);
+		} else if (type == Types.BIGINT) {
+			return cStmt.getLong(index);
+		} else if (type == Types.BOOLEAN) {
+			return cStmt.getBoolean(index);
 		} else {
-			return cStmt.getString(key);
+			return cStmt.getString(index);
 		}
 	}
 
