@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.szmengran.common.orm.dao.mysql.MySqlDao

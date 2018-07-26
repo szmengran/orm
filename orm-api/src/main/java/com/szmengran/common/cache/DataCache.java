@@ -1,7 +1,7 @@
 package com.szmengran.common.cache;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 /**
  * 
  * @ClassName: DataCache 
@@ -11,7 +11,7 @@ import java.util.Map;
  *
  */
 public class DataCache {
-	private static final Map<String,Object> map = new HashMap<String,Object>();
+	private static final Map<String,Object> map = new ConcurrentHashMap<String,Object>();
 	private static final DataCache dataCache = new DataCache();
 	private DataCache(){}
 	public static DataCache getInstance(){
