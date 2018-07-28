@@ -879,13 +879,14 @@ public abstract class AbstractDao {
 	 * @throws @author
 	 *             <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void update(Object object) throws IOException, SQLException, Exception {
+	public int update(Object object) throws IOException, SQLException, Exception {
 		DBManager dbManager = null;
+		int num = 0;
 		try {
 			dbManager = new DBManager(writeDataSource);
 			dbManager.openConnection();
 			dbManager.beginTransaction();
-			update(dbManager, object);
+			num = update(dbManager, object);
 			dbManager.commitTransaction();
 		} catch (Exception e) {
 			dbManager.rollbackTransaction();
@@ -893,6 +894,7 @@ public abstract class AbstractDao {
 		} finally {
 			dbManager.close();
 		}
+		return num;
 	}
 
 	/**
@@ -910,7 +912,7 @@ public abstract class AbstractDao {
 	 * @throws @author
 	 *             <a href="mailto:android_li@sina.cn">Joe</a>
 	 */
-	public void update(DBManager dbManager, Object object) throws NoSuchMethodException, SecurityException,
+	public int update(DBManager dbManager, Object object) throws NoSuchMethodException, SecurityException,
 			SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Map<String, Method> map = ReflectHandler.getFieldAndGetMethodFromObject(object);
 		Set<String> set = map.keySet();
@@ -938,7 +940,7 @@ public abstract class AbstractDao {
 			Object value = method.invoke(object);
 			dbManager.setPrepareParameters(index++, value);
 		}
-		dbManager.executePrepare();
+		return dbManager.executePrepare();
 	}
 
 	/**
@@ -974,12 +976,14 @@ public abstract class AbstractDao {
 	 * @throws InvocationTargetException
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
+	 * @throws InstantiationException 
 	 * @throws Exception
 	 *             Author： <a href="mailto:android_li@sina.cn">LiMaoYuan</a>
 	 *             DateTime： Jan 19, 2017 4:56:31 PM
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T findByPrimaryKey(DBManager dbManager, T object) throws SQLException, NoSuchMethodException,
-			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+			SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT * FROM " + object.getClass().getSimpleName().toUpperCase() + " WHERE ");
 		List<String> idFields = dbManager.getPrimaryKeys(object);
@@ -999,13 +1003,14 @@ public abstract class AbstractDao {
 			Object value = method.invoke(object);
 			dbManager.setPrepareParameters(index++, value);
 		}
+		Object obj = object.getClass().newInstance();
 		dbManager.executePrepareQuery();
 		if (dbManager.next()) {
-			dbManager.setObjectValueByField(object);
+			dbManager.setObjectValueByField(obj);
 		} else {
 			return null;
 		}
-		return (T) object;
+		return (T)obj;
 	}
 
 	/**
