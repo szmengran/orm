@@ -695,7 +695,7 @@ public abstract class AbstractDao {
 	public <T> List<T> findByConditions(DBManager dbManager, Class<T> clazz, String strSql, Object[] params,
 			Integer startRow, Integer pageSize) throws SQLException, NoSuchMethodException, SecurityException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-		List<T> list = new ArrayList<T>();
+		List<T> list = null;
 		if (pageSize != null) { // 如果pageSize!=null说明传进来的参数有值，表示需要分页
 			dbManager.prepareStatement(getPageSql(strSql, startRow, pageSize));
 		} else {
@@ -709,6 +709,9 @@ public abstract class AbstractDao {
 		}
 		dbManager.executePrepareQuery();
 		while (dbManager.next()) {
+			if (list == null) {
+				list = new ArrayList<T>();
+			}
 			list.add((T) dbManager.setObjectValueByField(clazz.newInstance()));
 		}
 		return list;

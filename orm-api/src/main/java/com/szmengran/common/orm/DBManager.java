@@ -664,17 +664,7 @@ public class DBManager {
 	 */
 	public void setPrepareParameters(int index, Object value) throws SQLException {
 		logger.info("index:" + index + ",value:" + value);
-		if (value instanceof Integer) {
-			ps.setInt(index, (Integer) value);
-		} else if (value instanceof Double) {
-			ps.setDouble(index, Double.parseDouble(value.toString()));
-		} else if (value instanceof Date) {
-			ps.setTimestamp(index, new java.sql.Timestamp(((Date) value).getTime()));
-		} else if (value instanceof Long) {
-			ps.setLong(index, ((Long) value).longValue());
-		} else {
-			ps.setString(index, (String) value);
-		}
+		ps.setObject(index, value);
 	}
 
 	/**
@@ -695,19 +685,78 @@ public class DBManager {
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Map<String, Method> map = ReflectHandler.getFieldAndSetMethodFromObject(object);
 		Set<Field> set = ReflectHandler.getAllFields(object);
+		String filedName = "";
 		for (Field field : set) {
 			Object objType = field.getType();
 			Method method = map.get(field.getName().toUpperCase());
+
+			filedName = field.getName();
 			if (objType == Integer.class) {
-				Integer ivalue = rs.getInt(field.getName());
-				method.invoke(object, ivalue == null ? 0 : ivalue);
-			} else if (objType == Date.class || objType == Timestamp.class) {
-				method.invoke(object, rs.getTimestamp(field.getName()));
+				int value = rs.getInt(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
+			} else if (objType == Short.class) {
+				Short value = rs.getShort(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
+			}else if (objType == Date.class || objType == Timestamp.class) {
+				Timestamp value = rs.getTimestamp(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
+			} else if (objType == java.sql.Date.class) {
+				Date date = rs.getDate(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, date);
 			} else if (objType == Double.class) {
-				method.invoke(object, rs.getDouble(field.getName()));
-			} else if (objType == String.class) {
-				String sValue = rs.getString(field.getName());
-				method.invoke(object, sValue == null ? "" : sValue);
+				Double value = rs.getDouble(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
+			} else if (objType == Long.class) {
+				Long value = rs.getLong(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
+			} else if (objType == Blob.class) {
+				Blob value = rs.getBlob(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
+			} else if (objType == Float.class) {
+				Float value = rs.getFloat(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
+			} else if (objType == Byte.class) {
+				Byte value = rs.getByte(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
+			} else if (objType == Boolean.class) {
+				Boolean value = rs.getBoolean(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
+			} else { // 字符串
+				String value = rs.getString(filedName);
+				if (rs.wasNull()) {
+					continue;
+				}
+				method.invoke(object, value);
 			}
 		}
 		return object;
