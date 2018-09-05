@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.szmengran</groupId>
@@ -12,15 +13,15 @@
 	</modules>
 	<properties>
 		<!-- for maven compiler plugin -->
-		<druid.version>1.1.9</druid.version>
-		<mysql.version>5.1.28</mysql.version>
+		<druid.version>1.1.10</druid.version>
+		<mysql.version>5.1.47</mysql.version>
 		<junit.version>4.11</junit.version>
 		<json.version>2.4</json.version>
 		<slf4j.version>1.7.25</slf4j.version>
 
 		<java.version>1.8</java.version>
 		<file_encoding>UTF-8</file_encoding>
-		
+
 		<spring.version>5.0.6.RELEASE</spring.version>
 	</properties>
 	<dependencyManagement>
@@ -37,9 +38,10 @@
 				<version>[${druid.version},)</version>
 			</dependency>
 			<dependency>
+			<!-- mvn install:install-file -Dfile=ojdbc8.jar -DgroupId=com.oracle -DartifactId=ojdbc -Dversion=12.2.0.1 -Dpackaging=jar -->
 				<groupId>com.oracle</groupId>
 				<artifactId>ojdbc</artifactId>
-				<version>10.2.0.3</version>
+				<version>12.2.0.1</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
