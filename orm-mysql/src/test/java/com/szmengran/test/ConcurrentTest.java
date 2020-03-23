@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 
 /**
  * @Package com.szmengran.test
@@ -52,21 +52,6 @@ public class ConcurrentTest {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) throws ClassNotFoundException, SQLException, InterruptedException {
-        Class.forName(dbClassName);
-        ResetEnvironment();
-        ExecutorService executor = Executors.newFixedThreadPool(20);
-        for (int i = 0; i < 1000; i++) {
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    worker();
-                }
-            });
-        }
-        executor.shutdown();
-        if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-            System.err.println("Pool did not terminate");
-        }
-    }
+    
+    
 }
