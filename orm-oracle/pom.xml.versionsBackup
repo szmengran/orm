@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>com.suntak</groupId>
 		<artifactId>orm</artifactId>
-		<version>1.0.1</version>
+		<version>1.0.0</version>
 	</parent>
-	<artifactId>orm-mysql</artifactId>
+	<artifactId>orm-oracle</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.suntak</groupId>
