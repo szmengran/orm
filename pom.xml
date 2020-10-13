@@ -15,7 +15,7 @@
 		<!-- for maven compiler plugin -->
 		<druid.version>1.1.10</druid.version>
 		<mysql.version>5.1.47</mysql.version>
-		<junit.version>4.11</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<json.version>2.4</json.version>
 		<slf4j.version>1.7.25</slf4j.version>
 
